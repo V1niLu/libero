@@ -1,0 +1,36 @@
+.category{
+    width: 90%;
+    height: 60px;
+    margin: 40px auto 40px auto;
+}
+
+.category h3{
+    font-size: 1.5rem;
+    color: black;
+    margin-bottom: 10px;
+}
+
+.containerCategory{
+    width: 100%;
+    margin: auto;
+    height: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 20px;
+}
+
+.containerCategory p{
+    color: black;
+    background-color: rgb(242, 242, 242);
+    padding: 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+
+.containerCategory p:hover{
+    background-color: #00a11b;
+    color: white
+
+}
