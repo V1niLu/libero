@@ -1,0 +1,12 @@
+body{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.menuPerfil{
+    background-color: red;
+    width: 40%;
+    height: 100%;
+}

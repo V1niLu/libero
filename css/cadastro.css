@@ -1,0 +1,126 @@
+body{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+img{
+    width: 30%;
+    margin-bottom: 30px;
+}
+
+h2{
+    font-size: 2rem;
+    margin-bottom: 50px;
+    text-align: center;
+}
+
+span{
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+a{
+    text-decoration: none;
+    color: #00a11b;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    margin-bottom: 50px;
+}
+
+a:hover{
+    color: #00c11b;
+    text-decoration: underline;
+}
+
+.login{
+    width: 45%;
+    height: 100vh;
+    padding: 0 20px;
+}
+
+.login button{
+    width: 40%;
+    font-size: 1.2rem;
+}
+
+.formInfo{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.formInfo input{
+    width: 60%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.links{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 60%;
+
+}
+
+.cadastro{
+    width: 50%;
+    height: 100vh;
+    padding: 0 20px;
+}
+
+.cadastro button{
+    width: 40%;
+    font-size: 1.2rem;
+}
+
+
+.divTransition{
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.divTransition img{
+    width: 110%;
+    height: 110%;
+}
+
+.loginTransition{
+    animation: slideRight 0.5s linear;
+    right: 0;
+}
+
+@keyframes slideRight {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0%);
+    }
+}
+
+.cadastroTransition{
+    animation: slideleft 0.5s linear;
+    left: 0;
+}
+
+@keyframes slideleft {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0%);
+    }
+}
