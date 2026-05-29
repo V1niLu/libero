@@ -17,10 +17,12 @@
     display: flex;
     justify-content: start;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
+    overflow: hidden;
 }
 
 .containerCategory p{
+    font-size: 1rem;
     color: black;
     background-color: rgb(242, 242, 242);
     padding: 10px;

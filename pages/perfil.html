@@ -10,19 +10,59 @@
 </head>
 <body>
 
-    <section class="menuPerfil">
-        <h2>Meus Dados</h2>
-        <h2>Meus Pedidos</h2>
-        <h2>Configurações</h2>
-    </section>
+    <div class="anuncio desativar">
+        <div class="containerAnuncio">
+            <h2>Anunciar novo item</h2>
 
-    <section class="infoPerfil">
-        <h2></h2>
-        <h2>Telefone</h2>
-        <h2>Email</h2>
-        <h2>Endereço</h2>
-        <h2>Cidade, UF</h2>
-    </section>
+            <div class="upload">
+                <div class="uploadImg">
+                    <input type="file">
+                </div>
+                <div class="uploadImgConcluidas">
+                    <img src="https://www.estadao.com.br/recomenda/wp-content/uploads/2024/03/Geladeira-Consul-Frost-Free-342-litros_hero.jpg-e1709645779986.webp" alt="">
+                </div>
+            </div>
+
+            <label> O que você quer liberar?</label>
+            <input type="text" placeholder="Ex: Sofá de 3 lugares, Lote de livros, Restos de obra...">
+            
+            <div class="opcoesAnuncio">
+                <div class="infoAnuncio">
+                    <label>Categorias</label>
+                    <select name="" id="">
+                        <option value="outros">Outros</option>
+                        <option value="roupas">Roupas</option>
+                        <option value="livros">Livros</option>
+                        <option value="eletronicos">Eletronicos</option>
+                        <option value="moveis">Móveis</option>
+                        <option value="utensilios">Utensílios</option>
+                        <option value="maquinas">Maquinas</option>
+                        <option value="entulho">Entulho</option>
+                        <option value="sucata">Sucata</option>
+                        <option value="construcao">Construção</option>
+                        <option value="refeicao">Refeição</option>
+                    </select>
+                </div>
+
+                <div class="infoAnuncio">
+                    <label for="">Duração do Anúncio</label>
+                    <select name="" id="">
+                        <option value="">1 semana</option>
+                        <option value="">15 dias</option>
+                        <option value="">1 mês</option>
+                    </select>
+                </div>
+            </div>
+
+            <label for="">Descrição Detalhada</label>
+            <textarea name="" id=""></textarea>
+            
+            <label for="">Volume / Quantidade</label>
+            <input type="text" placeholder="Ex: 2 sacolas grandes, 10 unidades...">
+        
+            <button>Publicar Anuncio</button>
+        </div>
+    </div>
     
 </body>
 </html>
