@@ -7,10 +7,12 @@
     <link rel="shortcut icon" href="../img/icone.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/perfil.css">
     <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/menu.css">
 </head>
 <body>
 
-    <div class="anuncio desativar">
+    <div id="anuncio" class="anuncio desativar">
+        <div class="fecharAnuncio" onclick="fecharAnuncio()">X</div>
         <div class="containerAnuncio">
             <h2>Anunciar novo item</h2>
 
@@ -63,6 +65,48 @@
             <button>Publicar Anuncio</button>
         </div>
     </div>
-    
+
+    <section id="menu" class="menu fixar">
+        <div class="containerM">
+            <img src="../img/logo.png" alt="">
+
+            <div class="explorar">
+                <a href="../index.html">Explorar</a>
+            </div>
+
+            <div class="pesquisa">
+                <input type="text" placeholder="Faça sua pesquisa" name="" id="">
+                <button>Pesquisar</button>
+            </div>
+
+            <div>
+                <img src="../img/notificacao.svg" alt="">
+            </div>
+
+            <div class="perfilMenu">
+                <a href="../pages/cadastro.html">Entre</a>
+                <p>ou</p>
+                <a href="../pages/cadastro.html">Cadastre-se</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="itensAnuncio">
+
+        <button onClick="addAnuncio()">Adicionar anúncio</button>
+
+        <div>
+            <h2>Anúncios Ativos</h2>
+        </div>
+        <div>
+            <h2>Anúncios Expirados</h2>
+        </div>
+        <div>
+            <h2>Anúncios Excluidos</h2>
+        </div>
+    </section>
+
+    <script src="../js/perfil.js"></script>
+
 </body>
 </html>

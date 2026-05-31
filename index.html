@@ -17,7 +17,8 @@
 </head>
 <body>
 
-    <div class="comprar">
+    <div id="comprar" class="comprar desativar">
+        <div class="fecharAnuncio" onclick="fecharCompra()">X</div>
         <div class="containerCompra">
             <div class="infoCompra">
             
@@ -53,13 +54,21 @@
         </div>
     </div>
 
-    <section class="menu">
+    <section id="menu" class="menu fixar">
         <div class="containerM">
             <img src="img/logo.png" alt="">
+
+            <div class="explorar">
+                <a href="index.html">Explorar</a>
+            </div>
 
             <div class="pesquisa">
                 <input type="text" placeholder="Faça sua pesquisa" name="" id="">
                 <button>Pesquisar</button>
+            </div>
+
+            <div>
+                <img src="./img/notificacao.svg" alt="">
             </div>
 
             <div class="perfilMenu">
@@ -107,7 +116,7 @@
 
     <section class="produtos">
         <div id="listagemProduto" class="containerListagem">
-            <div class="produto">
+            <div class="produto" onclick="abrirCompra()">
                 <img src="https://netsofas.vtexassets.com/arquivos/ids/194882/colosso-ambiente-linhosoft-prata.jpg?v=638718702283570000" alt="">  
                 <div class="containerProduto">
                     <h4>Titulo produto</h4>
@@ -126,5 +135,7 @@
             <p>Copyright © 2026 - Liberô</p>
     </section>
     
+    <script src="./js/mainPage.js"></script>
+
 </body>
 </html>

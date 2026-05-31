@@ -20,15 +20,15 @@
                 <input type="password" placeholder="digite sua senha" id="senha" name="senha" required>
                 
                 <div class="links">
-                    <a href="">Esqueceu a senha?</a>
-                    <a href="">Cadastre-se</a>
+                    <a>Esqueceu a senha?</a>
+                    <a onclick="transicaoCadastro()" >Cadastre-se</a>
                 </div>
                 <a href="perfil.html">perfil </a> 
                 <button>Entrar</button>
             </div>
     </section>
 
-    <div class="divTransition loginTransition">
+    <div id="trasicao" class="divTransition loginTransition">
         <img src="../img/wallpaper_cadastro.png" alt="">
     </div>
 
@@ -42,12 +42,14 @@
             <input type="password" placeholder="Digite sua senha: ">
             <input type="password" placeholder="Confirme sua senha: ">
 
-            <a href="">Já tem uma conta?</a>
+            <a onclick="transitionLogin()" >Já tem uma conta?</a>
 
 
             <button>Cadastrar</button>
         </div>
     </section>
+
+    <script src="../js/cadastro.js"></script>
 
 </body>
 </html>
