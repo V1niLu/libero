@@ -285,14 +285,16 @@ function renderizarAnunciosPerfil() {
 
     const todos     = getAnunciosPorUsuario(usuario.usuarioId);
     const ativos    = todos.filter(a => a.ativo);
-    const expirados = todos.filter(a => !a.ativo);
+    const liberados = todos.filter(a => !a.ativo && a.situacao === 'liberado');
+    const expirados = todos.filter(a => !a.ativo && a.situacao !== 'liberado');
 
-    document.getElementById('totalAtivos')?.setAttribute('data-count', ativos.length);
-    document.getElementById('totalAtivos') && (document.getElementById('totalAtivos').textContent = ativos.length);
+    document.getElementById('totalAtivos')    && (document.getElementById('totalAtivos').textContent    = ativos.length);
     document.getElementById('totalExpirados') && (document.getElementById('totalExpirados').textContent = expirados.length);
+    document.getElementById('totalLiberados') && (document.getElementById('totalLiberados').textContent = liberados.length);
 
-    const containerAtivos = document.getElementById('listaAtivos');
+    const containerAtivos    = document.getElementById('listaAtivos');
     const containerExpirados = document.getElementById('listaExpirados');
+    const containerLiberados = document.getElementById('listaLiberados');
 
     if (containerAtivos) {
         containerAtivos.innerHTML = ativos.length > 0
@@ -304,6 +306,40 @@ function renderizarAnunciosPerfil() {
             ? expirados.map(renderizarCardPerfil).join('')
             : '<p class="estado-vazio">Nenhum anúncio expirado.</p>';
     }
+    if (containerLiberados) {
+        containerLiberados.innerHTML = liberados.length > 0
+            ? liberados.map(renderizarCardLiberado).join('')
+            : '<p class="estado-vazio">Nenhum anúncio liberado ainda.</p>';
+    }
+}
+
+function renderizarCardLiberado(anuncio) {
+    const comprador     = anuncio.liberacao?.compradorId
+        ? buscarUsuarioPorId(anuncio.liberacao.compradorId) : null;
+    const compradorNome = comprador?.nome || 'Interessado';
+    const dataLib       = anuncio.liberacao?.liberadoEm
+        ? formatarData(anuncio.liberacao.liberadoEm) : '';
+    const conversaId    = anuncio.liberacao?.compradorId
+        ? `${anuncio.id}::${anuncio.liberacao.compradorId}` : null;
+
+    return `
+        <article class="card-perfil card-liberado" data-id="${anuncio.id}">
+            <div class="card-perfil-img">
+                <img src="${obterPrimeiraImagem(anuncio)}" alt="${anuncio.titulo}" loading="lazy">
+                <span class="badge-liberado">Liberado</span>
+            </div>
+            <div class="card-perfil-info">
+                <span class="badge-categoria" style="background:${getCoresCategoria(anuncio.categoria)}">${getNomeCategoria(anuncio.categoria)}</span>
+                <h4>${truncarTexto(anuncio.titulo, 50)}</h4>
+                <p>${anuncio.volume}</p>
+                <p class="texto-liberado">Liberado para <strong>${compradorNome}</strong></p>
+                ${dataLib ? `<p class="texto-data-lib">${dataLib}</p>` : ''}
+            </div>
+            <div class="card-perfil-acoes">
+                <button class="btn-excluir" onclick="confirmarExclusao('${anuncio.id}')">Excluir</button>
+                ${conversaId ? `<a href="chat.html?conversa=${conversaId}" class="btn-chat-prop">💬 Chat</a>` : ''}
+            </div>
+        </article>`;
 }
 
 // ── Abas ──────────────────────────────────────────────────────────────────────
@@ -712,11 +748,12 @@ function renderizarNotificacoesPerfil() {
         proposta_vencedora:         '🏆',
         proposta_vencedora_vendedor:'🏆',
         negociacao_confirmada:      '🤝',
-        negociacao_recusada:        '❌'
+        negociacao_recusada:        '❌',
+        venda_liberada:             '🔓'
     };
 
     container.innerHTML = notifs.map(n => {
-        const chatBtn = ((n.tipo === 'proposta_aceita' || n.tipo === 'negociacao_confirmada') && n.conversaId)
+        const chatBtn = ((n.tipo === 'proposta_aceita' || n.tipo === 'negociacao_confirmada' || n.tipo === 'venda_liberada') && n.conversaId)
             ? `<a href="chat.html?conversa=${n.conversaId}" class="btn-chat-notif" onclick="event.stopPropagation()">💬 Chat</a>`
             : '';
 
@@ -1374,8 +1411,12 @@ function renderizarConversasPerfil() {
         return;
     }
 
-    container.innerHTML = conversas.map(c => `
-        <div class="conversa-card">
+    container.innerHTML = conversas.map(c => {
+        const anuncio    = getAnuncioById(c.anuncioId);
+        const eLiberado  = anuncio?.situacao === 'liberado';
+        return `
+        <div class="conversa-card ${eLiberado ? 'conversa-liberada' : ''}">
+            ${eLiberado ? '<span class="etiqueta-liberado">Liberado</span>' : ''}
             <span class="conversa-icon">💬</span>
             <div class="conversa-info">
                 <h4>${truncarTexto(c.anuncioTitulo, 45)}</h4>
@@ -1383,6 +1424,6 @@ function renderizarConversasPerfil() {
             </div>
             <span class="conversa-papel">${c.papel === 'vendedor' ? 'Vendedor' : 'Interessado'}</span>
             <a href="chat.html?conversa=${c.id}" class="btn-abrir-chat">Abrir chat</a>
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 }

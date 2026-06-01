@@ -344,6 +344,41 @@ function processarConfirmacaoNegociacao(anuncioId, papel, decisao) {
     return anuncio.situacao;
 }
 
+// ── Liberação de venda (confirmação mútua via chat) ───────────────────────────
+
+function processarLiberacao(anuncioId, papel) {
+    // papel: 'comprador' | 'vendedor'
+    const db  = getDB();
+    const idx = db.anuncios.findIndex(a => a.id === anuncioId);
+    if (idx === -1) return null;
+
+    const anuncio = db.anuncios[idx];
+
+    if (!anuncio.liberacao) {
+        const propostaAceita = (anuncio.propostas || []).find(p => p.status === 'aceita');
+        if (!propostaAceita) return null;
+
+        anuncio.liberacao = {
+            compradorId:        propostaAceita.usuarioId,
+            compradorConfirmou: false,
+            vendedorConfirmou:  false,
+            liberadoEm:         null
+        };
+    }
+
+    if (papel === 'comprador') anuncio.liberacao.compradorConfirmou = true;
+    if (papel === 'vendedor')  anuncio.liberacao.vendedorConfirmou  = true;
+
+    if (anuncio.liberacao.compradorConfirmou && anuncio.liberacao.vendedorConfirmou) {
+        anuncio.situacao             = 'liberado';
+        anuncio.ativo                = false;
+        anuncio.liberacao.liberadoEm = Date.now();
+    }
+
+    salvarDB(db);
+    return anuncio.liberacao;
+}
+
 // Atualiza status da proposta buscando por anuncioId + usuarioId do proponente
 function atualizarStatusPropostaPorUsuario(anuncioId, usuarioId, status) {
     const db         = getDB();

@@ -2,7 +2,12 @@
 
 // ── Estado ────────────────────────────────────────────────────────────────────
 
-let _conversaId = null;
+let _conversaId  = null;
+let _anuncioId   = null;
+let _vendedorId  = null;
+let _compradorId = null;
+let _eVendedor   = false;
+let _eComprador  = false;
 
 // ── Inicialização ─────────────────────────────────────────────────────────────
 
@@ -31,6 +36,13 @@ function initChat() {
         window.location.href = 'perfil.html';
         return;
     }
+
+    // Persiste estado para as funções de liberação
+    _anuncioId   = anuncioId;
+    _vendedorId  = anuncio?.usuarioId || null;
+    _compradorId = proponenteId;
+    _eVendedor   = eVendedor;
+    _eComprador  = eComprador;
 
     // Cabeçalho da conversa
     const outroId   = eVendedor ? proponenteId : anuncio?.usuarioId;
@@ -65,6 +77,7 @@ function initChat() {
         textarea.focus();
     }
 
+    inicializarPainelLiberacao();
     carregarMensagens();
 }
 
@@ -162,6 +175,130 @@ function adicionarMensagemDom(msg) {
 
     c.insertAdjacentHTML('beforeend', _renderMensagem(msg, usuario.usuarioId));
     c.scrollTop = c.scrollHeight;
+}
+
+// ── Liberação de venda ────────────────────────────────────────────────────────
+
+function inicializarPainelLiberacao() {
+    const anuncio = getAnuncioById(_anuncioId);
+    if (!anuncio) return;
+
+    const temPropostaAceita = (anuncio.propostas || []).some(
+        p => p.status === 'aceita' && p.usuarioId === _compradorId
+    );
+    const estaLiberado = anuncio.situacao === 'liberado';
+
+    // Mostra painel apenas quando há proposta aceita ou quando já foi liberado
+    if (!temPropostaAceita && !estaLiberado) return;
+
+    const painel = document.getElementById('painelLiberacao');
+    if (painel) painel.style.display = 'block';
+
+    atualizarUILiberacao(anuncio);
+}
+
+function atualizarUILiberacao(anuncioOuId) {
+    const anuncio = typeof anuncioOuId === 'string'
+        ? getAnuncioById(anuncioOuId)
+        : anuncioOuId;
+    if (!anuncio) return;
+
+    const lib                = anuncio.liberacao || {};
+    const compradorConfirmou = lib.compradorConfirmou || false;
+    const vendedorConfirmou  = lib.vendedorConfirmou  || false;
+    const estaLiberado       = anuncio.situacao === 'liberado';
+
+    const elComp = document.getElementById('libStatusComprador');
+    const elVend = document.getElementById('libStatusVendedor');
+
+    if (elComp) {
+        elComp.className = `lib-status-item ${compradorConfirmou ? 'lib-confirmado' : 'lib-pendente'}`;
+        const icone = elComp.querySelector('.lib-icone');
+        const texto = document.getElementById('libTextoComprador');
+        if (icone) icone.textContent = compradorConfirmou ? '✅' : '⏳';
+        if (texto) texto.textContent = compradorConfirmou ? 'Comprador confirmou' : 'Aguardando comprador';
+    }
+
+    if (elVend) {
+        elVend.className = `lib-status-item ${vendedorConfirmou ? 'lib-confirmado' : 'lib-pendente'}`;
+        const icone = elVend.querySelector('.lib-icone');
+        const texto = document.getElementById('libTextoVendedor');
+        if (icone) icone.textContent = vendedorConfirmou ? '✅' : '⏳';
+        if (texto) texto.textContent = vendedorConfirmou ? 'Vendedor liberou' : 'Aguardando liberação';
+    }
+
+    const btnFinalizar = document.getElementById('btnFinalizarVenda');
+    const btnLiberar   = document.getElementById('btnLiberarAnuncio');
+    const msgCompleta  = document.getElementById('liberacaoCompleta');
+
+    if (estaLiberado) {
+        if (btnFinalizar) btnFinalizar.style.display = 'none';
+        if (btnLiberar)   btnLiberar.style.display   = 'none';
+        if (msgCompleta)  msgCompleta.style.display  = 'flex';
+        return;
+    }
+
+    if (msgCompleta) msgCompleta.style.display = 'none';
+    if (btnFinalizar) btnFinalizar.style.display = (_eComprador && !compradorConfirmou) ? 'inline-flex' : 'none';
+    if (btnLiberar)   btnLiberar.style.display   = (_eVendedor  && !vendedorConfirmou)  ? 'inline-flex' : 'none';
+}
+
+function confirmarLiberacao() {
+    const papel = _eComprador ? 'comprador' : 'vendedor';
+    const btn   = document.getElementById(_eComprador ? 'btnFinalizarVenda' : 'btnLiberarAnuncio');
+    if (btn) btn.disabled = true;
+
+    const result = processarLiberacao(_anuncioId, papel);
+    if (!result) {
+        if (btn) btn.disabled = false;
+        mostrarFeedback('feedbackChat', 'Não foi possível processar a confirmação.', 'error');
+        return;
+    }
+
+    emitirLiberacao(_conversaId, _anuncioId, papel, _vendedorId, _compradorId);
+
+    const anuncio = getAnuncioById(_anuncioId);
+    atualizarUILiberacao(anuncio);
+
+    if (anuncio?.situacao === 'liberado') {
+        _enviarNotificacoesLiberacao(anuncio);
+        mostrarToast('Anúncio liberado! Transação concluída.', 'sucesso');
+    } else {
+        const outro = _eComprador ? 'vendedor' : 'comprador';
+        mostrarToast(`Confirmação enviada! Aguardando o ${outro}.`, 'info');
+    }
+}
+
+function _enviarNotificacoesLiberacao(anuncio) {
+    const usuario = getUsuarioLogado();
+    const conversaId = _conversaId;
+
+    [_vendedorId, _compradorId].forEach(userId => {
+        if (!userId) return;
+        const notif = {
+            id:             gerarUUID(),
+            destinatarioId: userId,
+            tipo:           'venda_liberada',
+            anuncioId:      _anuncioId,
+            anuncioTitulo:  anuncio.titulo,
+            remetenteNome:  usuario.nome,
+            conversaId,
+            detalhes:       `Transação concluída para "${truncarTexto(anuncio.titulo, 35)}"! Anúncio liberado.`,
+            timestamp:      Date.now(),
+            lida:           false
+        };
+        adicionarNotificacao(notif);
+        emitirNotificacao(userId, notif);
+    });
+}
+
+// Chamada pelo listener do realtime.js quando o outro participante confirma
+function onLiberacaoAtualizada(dados) {
+    if (dados.conversaId !== _conversaId) return;
+    const anuncio = getAnuncioById(dados.anuncioId);
+    const painel  = document.getElementById('painelLiberacao');
+    if (painel && painel.style.display === 'none') painel.style.display = 'block';
+    atualizarUILiberacao(anuncio);
 }
 
 function _renderMensagem(m, meuId) {

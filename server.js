@@ -125,6 +125,15 @@ io.on('connection', (socket) => {
             io.to(`usuario:${compradorId}`).emit('negociacao:atualizada', evento);
         }
     });
+
+    // Retransmite confirmação de liberação de venda para o chat e para os usuários
+    socket.on('venda:liberacao', ({ conversaId, anuncioId, papel, vendedorId, compradorId } = {}) => {
+        if (!conversaId || !anuncioId || !papel) return;
+        const dados = { conversaId, anuncioId, papel, vendedorId, compradorId };
+        io.to(`chat:${conversaId}`).emit('venda:liberacao:atualizada', dados);
+        if (vendedorId)  io.to(`usuario:${vendedorId}`).emit('venda:liberacao:atualizada',  dados);
+        if (compradorId) io.to(`usuario:${compradorId}`).emit('venda:liberacao:atualizada', dados);
+    });
 });
 
 // ── Inicialização ─────────────────────────────────────────────────────────────

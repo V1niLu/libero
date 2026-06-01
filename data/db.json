@@ -1,0 +1,56 @@
+{
+    "_comentario": "Estrutura de referência. Dados reais ficam no localStorage com a chave 'libero_db'.",
+    "usuarios": [
+        {
+            "id": "uuid-v4",
+            "nome": "string",
+            "email": "string — único, minúsculas",
+            "senha": "string — hash numérico simples",
+            "dataCadastro": "number — timestamp ms",
+            "tipoPerfil": "string — 'comum' | 'ong'",
+            "nomeInstituicao": "string | null — obrigatório se tipoPerfil='ong'"
+        }
+    ],
+    "anuncios": [
+        {
+            "id": "uuid-v4",
+            "usuarioId": "uuid-v4",
+            "titulo": "string — max 100",
+            "categoria": "string — enum: roupas|livros|eletronicos|moveis|utensilios|maquinas|entulho|sucata|construcao|refeicao|outros",
+            "descricao": "string — max 500",
+            "volume": "string",
+            "imagens": ["string — base64 data:image/..."],
+            "duracao": "number — dias: 7|15|30|60",
+            "dataPublicacao": "number — timestamp ms",
+            "dataExpiracao": "number — dataPublicacao + duracao*86400000",
+            "ativo": "boolean",
+            "restritoParaONGs": "boolean — default false",
+            "horarioRetiradaInicio": "string | null — 'HH:MM' (obrigatório para ONGs ou quando restrição ativa)",
+            "horarioRetiradaFim": "string | null — 'HH:MM'",
+            "propostas": [
+                {
+                    "id": "uuid-v4",
+                    "anuncioId": "uuid-v4",
+                    "usuarioId": "uuid-v4",
+                    "tipo": "string — 'pago_retirada'|'gratis_retirada'|'cobro_retirada'|'ong_interesse'",
+                    "valor": "number — 0 se sem valor monetário",
+                    "timestamp": "number — timestamp ms",
+                    "status": "string — 'pendente'|'aceita'|'recusada'"
+                }
+            ]
+        }
+    ],
+    "notificacoes": [
+        {
+            "id": "uuid-v4",
+            "destinatarioId": "uuid-v4",
+            "tipo": "string — 'nova_proposta'|'novo_interesse'|'proposta_aceita'|'proposta_recusada'",
+            "anuncioId": "uuid-v4",
+            "anuncioTitulo": "string",
+            "remetenteNome": "string",
+            "detalhes": "string",
+            "timestamp": "number — timestamp ms",
+            "lida": "boolean"
+        }
+    ]
+}

@@ -40,6 +40,32 @@
                 <span class="chat-status desconectado" id="chatStatus">Desconectado</span>
             </div>
 
+            <!-- ── Painel de liberação ─────────────────────────────────────── -->
+            <div id="painelLiberacao" class="painel-liberacao" style="display:none" aria-label="Finalização da transação">
+                <p class="lib-titulo">Finalização da transação</p>
+                <div class="lib-status-container">
+                    <div id="libStatusComprador" class="lib-status-item lib-pendente">
+                        <span class="lib-icone">⏳</span>
+                        <span id="libTextoComprador">Aguardando comprador</span>
+                    </div>
+                    <div id="libStatusVendedor" class="lib-status-item lib-pendente">
+                        <span class="lib-icone">⏳</span>
+                        <span id="libTextoVendedor">Aguardando liberação</span>
+                    </div>
+                </div>
+                <div class="lib-acoes">
+                    <button id="btnFinalizarVenda" class="btn-finalizar-venda" onclick="confirmarLiberacao()" style="display:none" aria-label="Confirmar recebimento">
+                        Finalizar Venda
+                    </button>
+                    <button id="btnLiberarAnuncio" class="btn-liberar-anuncio" onclick="confirmarLiberacao()" style="display:none" aria-label="Confirmar entrega">
+                        Liberar
+                    </button>
+                </div>
+                <div id="liberacaoCompleta" class="liberacao-completa" style="display:none" role="status">
+                    Transação concluída! Anúncio liberado.
+                </div>
+            </div>
+
             <div class="chat-mensagens" id="chatMensagens" aria-live="polite">
                 <p class="chat-carregando">Carregando mensagens...</p>
             </div>

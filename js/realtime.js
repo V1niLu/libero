@@ -112,6 +112,26 @@ function inicializarRealtime() {
     _socket.on('chat:mensagem', (data) => {
         if (typeof onChatMensagemRecebida === 'function') onChatMensagemRecebida(data);
     });
+
+    _socket.on('venda:liberacao:atualizada', (dados) => {
+        // Atualiza o localStorage com a confirmação recebida (idempotente)
+        if (dados.anuncioId && dados.papel && typeof processarLiberacao === 'function') {
+            processarLiberacao(dados.anuncioId, dados.papel);
+        }
+
+        // Atualiza UI da página de chat
+        if (typeof onLiberacaoAtualizada === 'function') onLiberacaoAtualizada(dados);
+
+        // Atualiza UI do perfil (se estiver na página de perfil)
+        if (typeof renderizarConversasPerfil === 'function') renderizarConversasPerfil();
+        if (typeof renderizarAnunciosPerfil  === 'function') renderizarAnunciosPerfil();
+
+        const anuncio = typeof getAnuncioById === 'function' ? getAnuncioById(dados.anuncioId) : null;
+        const msg = anuncio?.situacao === 'liberado'
+            ? 'Anúncio liberado! Transação concluída.'
+            : 'Confirmação de liberação recebida.';
+        mostrarToast(msg, anuncio?.situacao === 'liberado' ? 'sucesso' : 'info');
+    });
 }
 
 // Atualiza o indicador de status na página de chat
@@ -145,6 +165,12 @@ function emitirAnuncioDeletado(destinatariosIds, anuncioTitulo) {
 function emitirConfirmacaoNegociacao(vendedorId, compradorId, evento) {
     if (_socket && _conectado) {
         _socket.emit('negociacao:confirmar', { vendedorId, compradorId, evento });
+    }
+}
+
+function emitirLiberacao(conversaId, anuncioId, papel, vendedorId, compradorId) {
+    if (_socket && _conectado) {
+        _socket.emit('venda:liberacao', { conversaId, anuncioId, papel, vendedorId, compradorId });
     }
 }
 
