@@ -1,0 +1,446 @@
+/* ── Layout ───────────────────────────────────────────────────────────────── */
+.pagina-detalhes {
+    width: 90%;
+    max-width: 1100px;
+    margin: 90px auto 40px auto;
+    padding: 0 10px;
+}
+
+.carregando {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--cor-cinza);
+}
+
+/* ── Layout principal ────────────────────────────────────────────────────── */
+.detalhes-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+/* ── Galeria / Carrossel ─────────────────────────────────────────────────── */
+.galeria {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.carrossel {
+    position: relative;
+    width: 100%;
+    padding-bottom: 75%; /* proporção 4:3 */
+    height: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--cor-cinza-claro);
+}
+
+.slide-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.slide-img.ativo {
+    opacity: 1;
+}
+
+.carrossel-controles {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+.carrossel-controles button {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--cor-cinza-claro);
+    color: var(--cor-texto);
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--cor-cinza-borda);
+}
+
+.carrossel-controles button:hover {
+    background: var(--cor-primaria);
+    color: white;
+    border-color: var(--cor-primaria);
+}
+
+#indicadorCarrossel {
+    font-size: 0.9rem;
+    color: var(--cor-cinza);
+    min-width: 50px;
+    text-align: center;
+}
+
+.carrossel-thumbs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.thumb {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.7;
+    transition: opacity 0.2s, border-color 0.2s;
+}
+
+.thumb:hover {
+    opacity: 1;
+}
+
+.thumb.ativa {
+    border-color: var(--cor-primaria);
+    opacity: 1;
+}
+
+/* ── Info do anúncio ─────────────────────────────────────────────────────── */
+.info-detalhes {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.info-topo h1 {
+    font-size: 1.6rem;
+    margin: 10px 0 6px;
+    line-height: 1.2;
+    color: var(--cor-texto);
+}
+
+.volume-detalhe {
+    font-size: 0.95rem;
+    color: var(--cor-cinza);
+}
+
+.descricao-detalhe h3,
+.anunciante-detalhe h3,
+.duracao-detalhe h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--cor-texto);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--cor-cinza-borda);
+}
+
+.descricao-detalhe p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #374151;
+    white-space: pre-wrap;
+}
+
+.anunciante-detalhe p {
+    font-size: 0.9rem;
+    color: var(--cor-cinza);
+    margin-bottom: 2px;
+}
+
+.anunciante-detalhe p:first-of-type {
+    font-weight: 600;
+    color: var(--cor-texto);
+    font-size: 0.95rem;
+}
+
+/* ── Botão voltar ────────────────────────────────────────────────────────── */
+.btn-voltar {
+    display: inline-block;
+    padding: 10px 20px;
+    background: var(--cor-cinza-claro);
+    color: var(--cor-texto);
+    border-radius: var(--raio);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.2s;
+    align-self: flex-start;
+    border: 1px solid var(--cor-cinza-borda);
+}
+
+.btn-voltar:hover {
+    background: var(--cor-cinza-borda);
+}
+
+/* ── Horário de retirada ────────────────────────────────────────────────── */
+.horario-detalhe h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--cor-cinza-borda);
+}
+
+.horario-detalhe p {
+    font-size: 0.95rem;
+    color: var(--cor-azul);
+    font-weight: 500;
+}
+
+/* ── Seção proposta / interesse ─────────────────────────────────────────── */
+.secao-proposta {
+    padding: 20px;
+    background: #f9fafb;
+    border-radius: var(--raio);
+    border: 1px solid var(--cor-cinza-borda);
+}
+
+.secao-proposta h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: var(--cor-texto);
+}
+
+.secao-restrita {
+    background: #fef3c7;
+    border-color: #f59e0b;
+}
+
+.secao-restrita p {
+    color: #92400e;
+    font-size: 0.9rem;
+}
+
+.aviso-login {
+    font-size: 0.9rem;
+    color: var(--cor-cinza);
+    text-align: center;
+}
+
+.aviso-login a {
+    color: var(--cor-primaria);
+    text-decoration: underline;
+}
+
+/* ── Form interesse ONG ─────────────────────────────────────────────────── */
+.form-interesse-ong {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.form-interesse-ong button {
+    margin-top: 4px;
+    align-self: flex-start;
+    padding: 10px 24px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    flex-shrink: 0;
+    accent-color: var(--cor-primaria);
+}
+
+.aviso-confirmacao {
+    font-size: 0.85rem;
+    color: var(--cor-cinza);
+    padding: 8px 12px;
+    background: #f0fdf4;
+    border-radius: 6px;
+    border-left: 3px solid var(--cor-primaria);
+}
+
+/* ── Form 3 radios ──────────────────────────────────────────────────────── */
+.radio-opcao {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--cor-cinza-borda);
+    margin-bottom: 10px;
+    background: white;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.radio-opcao:has(input:checked) {
+    border-color: var(--cor-primaria);
+    background: #f0fdf4;
+}
+
+.radio-opcao label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+.radio-opcao label input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    accent-color: var(--cor-primaria);
+}
+
+.radio-sufixo {
+    font-size: 0.9rem;
+    color: var(--cor-cinza);
+    width: 100%;
+    padding-left: 24px;
+}
+
+.input-valor-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.input-dinheiro {
+    width: 110px !important;
+    padding: 6px 10px !important;
+    font-size: 0.9rem !important;
+    border: 1px solid var(--cor-cinza-borda) !important;
+    border-radius: 6px !important;
+    text-align: right;
+    font-weight: 600;
+    color: var(--cor-primaria);
+}
+
+.secao-proposta > form > button {
+    margin-top: 4px;
+    padding: 10px 28px;
+}
+
+/* ── Proposta já enviada / recebidas ────────────────────────────────────── */
+.proposta-enviada {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid var(--cor-cinza-borda);
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.item-proposta.mini {
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: white;
+    font-size: 0.85rem;
+}
+
+.item-proposta.mini .proposta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.item-proposta.mini .proposta-acoes {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.item-proposta.mini .btn-aceitar {
+    flex: 1;
+    padding: 7px;
+    font-size: 0.82rem;
+}
+
+.item-proposta.mini .btn-recusar {
+    flex: 1;
+    padding: 7px;
+    font-size: 0.82rem;
+    background: var(--cor-erro);
+}
+
+.item-proposta.mini .btn-recusar:hover {
+    background: #b91c1c;
+}
+
+.item-proposta.mini .btn-chat-prop {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.item-proposta.mini .btn-chat-prop:hover {
+    background: #bfdbfe;
+}
+
+/* ── Endereço ────────────────────────────────────────────────────────────── */
+.endereco-detalhe h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--cor-cinza-borda);
+}
+
+.endereco-detalhe p {
+    font-size: 0.95rem;
+    color: var(--cor-texto);
+    font-weight: 500;
+}
+
+/* ── Erro ────────────────────────────────────────────────────────────────── */
+.erro-detalhes {
+    text-align: center;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.erro-detalhes p {
+    font-size: 1.1rem;
+    color: var(--cor-cinza);
+}
+
+/* ── Responsivo ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .detalhes-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .pagina-detalhes {
+        width: 95%;
+        margin-top: 80px;
+    }
+}

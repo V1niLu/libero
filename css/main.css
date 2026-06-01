@@ -1,46 +1,255 @@
-*{
+/* ── Variáveis ────────────────────────────────────────────────────────────── */
+:root {
+    --cor-primaria: #00a11b;
+    --cor-primaria-hover: #007d15;
+    --cor-azul: #2563eb;
+    --cor-cinza: #6b7280;
+    --cor-cinza-claro: #f3f4f6;
+    --cor-cinza-borda: #e5e7eb;
+    --cor-texto: #111827;
+    --cor-texto-suave: #6b7280;
+    --cor-erro: #dc2626;
+    --cor-sucesso: #16a34a;
+    --sombra: 0 2px 12px rgba(0, 0, 0, 0.08);
+    --raio: 10px;
+    --fonte: 'Lucida Sans', 'Lucida Grande', Geneva, Verdana, sans-serif;
+}
+
+/* ── Reset ────────────────────────────────────────────────────────────────── */
+* {
     padding: 0;
     margin: 0;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    box-sizing: border-box;
+    font-family: var(--fonte);
 }
 
-body{
+body {
     font-size: 1rem;
-    color: black;
+    color: var(--cor-texto);
+    background: #fafafa;
 }
 
-button{
-    padding: 10px;
-    border-radius: 10px;
+/* ── Botões ──────────────────────────────────────────────────────────────── */
+button {
+    padding: 10px 16px;
+    border-radius: var(--raio);
     border: none;
-    background-color: #00a11b;
+    background-color: var(--cor-primaria);
     font-size: 1rem;
     font-weight: bold;
     color: white;
-    transition: all 0.3s ease;
+    transition: background-color 0.2s ease, transform 0.1s ease;
     cursor: pointer;
 }
 
-button:hover{
-    background-color: #00c11b;
-    cursor: pointer;
+button:hover {
+    background-color: var(--cor-primaria-hover);
 }
 
-.fecharAnuncio{
-    width: 50px;
-    height: 50px;
-    background-color: #ccc;
-    border-radius: 50px;
+button:active {
+    transform: scale(0.97);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Fechar modal ────────────────────────────────────────────────────────── */
+.fecharAnuncio {
+    width: 40px;
+    height: 40px;
+    background-color: #e5e7eb;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
-    font-size: 1.5rem;
+    color: #374151;
+    font-size: 1.4rem;
     font-weight: bold;
-    transition: all 0.2s linear;
+    transition: background-color 0.2s ease;
     cursor: pointer;
+    user-select: none;
 }
 
-.fecharAnuncio:hover{
-    background-color: #9a9a9a;
+.fecharAnuncio:hover {
+    background-color: #d1d5db;
+}
+
+/* ── Badges ──────────────────────────────────────────────────────────────── */
+.badge-categoria {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.badge-destaque {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background-color: #f59e0b;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.badge-expirado {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background-color: #6b7280;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+/* ── Feedback ────────────────────────────────────────────────────────────── */
+.feedback {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: var(--raio);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.feedback-success {
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.feedback-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.feedback-loading {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+}
+
+.feedback-info {
+    background-color: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+/* ── Barra de progresso ──────────────────────────────────────────────────── */
+.barra-progresso {
+    width: 100%;
+    height: 6px;
+    background-color: var(--cor-cinza-borda);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 6px 0;
+}
+
+.barra-progresso-fill {
+    height: 100%;
+    background-color: var(--cor-primaria);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.barra-urgente {
+    background-color: #f59e0b;
+}
+
+/* ── Badges linha ────────────────────────────────────────────────────────── */
+.badges-linha {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+/* ── Estado vazio ────────────────────────────────────────────────────────── */
+.estado-vazio {
+    color: var(--cor-cinza);
+    font-size: 0.95rem;
+    padding: 40px 20px;
+    text-align: center;
+    width: 100%;
+}
+
+/* ── Desativar ───────────────────────────────────────────────────────────── */
+.desativar {
+    display: none !important;
+}
+
+/* ── Obrigatório ─────────────────────────────────────────────────────────── */
+.obrigatorio {
+    color: var(--cor-erro);
+}
+
+/* ── Texto dias ──────────────────────────────────────────────────────────── */
+.texto-dias {
+    font-size: 0.8rem;
+    color: var(--cor-cinza);
+}
+
+/* ── Responsividade geral ────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    button {
+        font-size: 0.9rem;
+    }
+}
+
+/* ── Toast notifications ─────────────────────────────────────────────────── */
+.toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.toast-notif {
+    background: #1f2937;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    max-width: 320px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+    transform: translateX(130%);
+    transition: transform 0.32s ease;
+    pointer-events: all;
+    cursor: pointer;
+    line-height: 1.45;
+}
+
+.toast-notif.toast-ativo {
+    transform: translateX(0);
+}
+
+.toast-aviso {
+    background: #d97706;
+}
+
+.toast-sucesso {
+    background: #16a34a;
+}
+
+@media (max-width: 600px) {
+    .toast-container {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+    }
+    .toast-notif {
+        max-width: 100%;
+    }
 }

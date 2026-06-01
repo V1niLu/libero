@@ -1,112 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liberô</title>
+    <meta name="description" content="Liberô - Gerencie seus anúncios.">
+    <title>Liberô - Meu Perfil</title>
     <link rel="shortcut icon" href="../img/icone.png" type="image/x-icon">
-    <link rel="stylesheet" href="../css/perfil.css">
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/menu.css">
+    <link rel="stylesheet" href="../css/perfil.css">
+    <link rel="stylesheet" href="../css/footer.css">
 </head>
 <body>
 
-    <div id="anuncio" class="anuncio desativar">
-        <div class="fecharAnuncio" onclick="fecharAnuncio()">X</div>
+    <!-- ── Modal: criar / editar anúncio ──────────────────────────────────── -->
+    <div id="anuncio" class="anuncio desativar" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+        <div class="fecharAnuncio" onclick="fecharAnuncio()" role="button" aria-label="Fechar">×</div>
         <div class="containerAnuncio">
-            <h2>Anunciar novo item</h2>
+            <h2 id="modalTitulo">Anunciar novo item</h2>
+            <div id="feedbackAnuncio" class="feedback" style="display:none" role="alert"></div>
 
-            <div class="upload">
-                <div class="uploadImg">
-                    <input type="file">
-                </div>
-                <div class="uploadImgConcluidas">
-                    <img src="https://www.estadao.com.br/recomenda/wp-content/uploads/2024/03/Geladeira-Consul-Frost-Free-342-litros_hero.jpg-e1709645779986.webp" alt="">
-                </div>
-            </div>
-
-            <label> O que você quer liberar?</label>
-            <input type="text" placeholder="Ex: Sofá de 3 lugares, Lote de livros, Restos de obra...">
-            
-            <div class="opcoesAnuncio">
-                <div class="infoAnuncio">
-                    <label>Categorias</label>
-                    <select name="" id="">
-                        <option value="outros">Outros</option>
-                        <option value="roupas">Roupas</option>
-                        <option value="livros">Livros</option>
-                        <option value="eletronicos">Eletronicos</option>
-                        <option value="moveis">Móveis</option>
-                        <option value="utensilios">Utensílios</option>
-                        <option value="maquinas">Maquinas</option>
-                        <option value="entulho">Entulho</option>
-                        <option value="sucata">Sucata</option>
-                        <option value="construcao">Construção</option>
-                        <option value="refeicao">Refeição</option>
-                    </select>
+            <form id="formAnuncio" novalidate>
+                <!-- Upload -->
+                <div class="upload">
+                    <label class="uploadImg" for="inputImagens" aria-label="Selecionar imagens">
+                        <span>Clique para adicionar imagens</span>
+                        <input type="file" id="inputImagens" accept="image/*" multiple style="display:none">
+                    </label>
+                    <div id="previewImagens" class="uploadImgConcluidas"></div>
                 </div>
 
-                <div class="infoAnuncio">
-                    <label for="">Duração do Anúncio</label>
-                    <select name="" id="">
-                        <option value="">1 semana</option>
-                        <option value="">15 dias</option>
-                        <option value="">1 mês</option>
-                    </select>
-                </div>
-            </div>
+                <!-- Título -->
+                <label for="tituloAnuncio">O que você quer liberar? <span class="obrigatorio">*</span></label>
+                <input type="text" id="tituloAnuncio" placeholder="Ex: Sofá de 3 lugares, Lote de livros..." maxlength="100" required>
+                <small class="contador-chars"><span id="contadorTitulo">0</span>/100</small>
 
-            <label for="">Descrição Detalhada</label>
-            <textarea name="" id=""></textarea>
-            
-            <label for="">Volume / Quantidade</label>
-            <input type="text" placeholder="Ex: 2 sacolas grandes, 10 unidades...">
-        
-            <button>Publicar Anuncio</button>
+                <div class="opcoesAnuncio">
+                    <div class="infoAnuncio">
+                        <label for="categoriaAnuncio">Categoria <span class="obrigatorio">*</span></label>
+                        <select id="categoriaAnuncio" required>
+                            <option value="">Selecione...</option>
+                            <option value="roupas">Roupas</option>
+                            <option value="livros">Livros</option>
+                            <option value="eletronicos">Eletrônicos</option>
+                            <option value="moveis">Móveis</option>
+                            <option value="utensilios">Utensílios</option>
+                            <option value="maquinas">Máquinas</option>
+                            <option value="entulho">Entulho</option>
+                            <option value="sucata">Sucata</option>
+                            <option value="construcao">Construção</option>
+                            <option value="refeicao">Refeição</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                    <div class="infoAnuncio">
+                        <label for="duracaoAnuncio">Duração <span class="obrigatorio">*</span></label>
+                        <select id="duracaoAnuncio" required>
+                            <option value="">Selecione...</option>
+                            <option value="1">24 horas</option>
+                            <option value="7">7 dias</option>
+                            <option value="15">15 dias</option>
+                            <option value="30">30 dias</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Restrição ONG (visível para todos) -->
+                <label class="checkbox-label">
+                    <input type="checkbox" id="restritoParaONGs">
+                    <span>Restrito para ONGs e Caridades</span>
+                </label>
+
+                <!-- Horários de retirada (ONG sempre; comum só se restrito) -->
+                <div id="wrapHorarios" style="display:none">
+                    <div class="opcoesAnuncio" style="margin-top:12px">
+                        <div class="infoAnuncio">
+                            <label for="horarioRetiradaInicio">Início da retirada <span class="obrigatorio">*</span></label>
+                            <input type="time" id="horarioRetiradaInicio">
+                        </div>
+                        <div class="infoAnuncio">
+                            <label for="horarioRetiradaFim">Fim da retirada <span class="obrigatorio">*</span></label>
+                            <input type="time" id="horarioRetiradaFim">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Descrição -->
+                <label for="descricaoAnuncio">Descrição detalhada <span class="obrigatorio">*</span></label>
+                <textarea id="descricaoAnuncio" placeholder="Descreva o item: estado, dimensões, observações..." maxlength="500" required></textarea>
+                <small class="contador-chars"><span id="contadorDescricao">0</span>/500</small>
+
+                <!-- Volume -->
+                <label for="volumeAnuncio">Volume / Quantidade <span class="obrigatorio">*</span></label>
+                <input type="text" id="volumeAnuncio" placeholder="Ex: 2 sacolas grandes, 10 unidades..." required>
+
+                <!-- Endereço -->
+                <label for="enderecoAnuncio">Endereço para retirada <span class="obrigatorio">*</span></label>
+                <input type="text" id="enderecoAnuncio" placeholder="Ex: Rua das Flores, 123 — Bairro, Cidade" maxlength="200" required>
+
+                <button type="submit" class="btn-publicar">Publicar anúncio</button>
+            </form>
         </div>
     </div>
 
-    <section id="menu" class="menu fixar">
-        <div class="containerM">
-            <img src="../img/logo.png" alt="">
-
-            <div class="explorar">
-                <a href="../index.html">Explorar</a>
-            </div>
-
-            <div class="pesquisa">
-                <input type="text" placeholder="Faça sua pesquisa" name="" id="">
-                <button>Pesquisar</button>
-            </div>
-
-            <div>
-                <img src="../img/notificacao.svg" alt="">
-            </div>
-
-            <div class="perfilMenu">
-                <a href="../pages/cadastro.html">Entre</a>
-                <p>ou</p>
-                <a href="../pages/cadastro.html">Cadastre-se</a>
+    <!-- ── Modal: propostas recebidas ─────────────────────────────────────── -->
+    <div id="modalPropostas" class="anuncio desativar" role="dialog" aria-modal="true" aria-labelledby="tituloModalPropostas">
+        <div class="fecharAnuncio" onclick="fecharModalPropostas()" role="button" aria-label="Fechar">×</div>
+        <div class="containerAnuncio containerPropostas">
+            <h2 id="tituloModalPropostas">Propostas recebidas</h2>
+            <div id="listaPropostas">
+                <!-- preenchido por app.js -->
             </div>
         </div>
-    </section>
+    </div>
 
-    <section class="itensAnuncio">
+    <!-- ── Menu ───────────────────────────────────────────────────────────── -->
+    <header>
+        <section id="menu" class="menu fixar">
+            <div class="containerM">
+                <a href="../index.html"><img src="../img/logo.png" alt="Liberô"></a>
+                <nav class="explorar"><a href="../index.html">Explorar</a></nav>
+                <div class="pesquisa">
+                    <input type="text" placeholder="Faça sua pesquisa" aria-label="Pesquisar">
+                    <button>Pesquisar</button>
+                </div>
+                <div><img src="../img/notificacao.svg" alt="Notificações"></div>
+                <nav class="perfilMenu" aria-label="Acesso ao perfil">
+                    <!-- preenchido por atualizarMenuPerfil() -->
+                </nav>
+            </div>
+        </section>
+    </header>
 
-        <button onClick="addAnuncio()">Adicionar anúncio</button>
+    <!-- ── Conteúdo do perfil ─────────────────────────────────────────────── -->
+    <main class="itensAnuncio">
 
-        <div>
-            <h2>Anúncios Ativos</h2>
+        <div class="perfil-header">
+            <div class="perfil-info">
+                <div class="perfil-avatar" aria-hidden="true">👤</div>
+                <div>
+                    <h2 id="nomeUsuario">Carregando...</h2>
+                    <p>Gerencie seus anúncios</p>
+                </div>
+            </div>
+            <div class="perfil-acoes">
+                <button onclick="addAnuncio()" class="btn-novo-anuncio" aria-label="Criar novo anúncio">+ Novo anúncio</button>
+                <button onclick="excluirConta()" class="btn-excluir-conta" aria-label="Excluir conta">Excluir conta</button>
+            </div>
         </div>
-        <div>
-            <h2>Anúncios Expirados</h2>
-        </div>
-        <div>
-            <h2>Anúncios Excluidos</h2>
-        </div>
-    </section>
 
-    <script src="../js/perfil.js"></script>
+        <!-- Abas -->
+        <div class="abas" role="tablist">
+            <button class="btn-aba ativa" data-aba="ativos" role="tab" aria-selected="true">
+                Ativos <span class="badge-count" id="totalAtivos">0</span>
+            </button>
+            <button class="btn-aba" data-aba="expirados" role="tab" aria-selected="false">
+                Expirados <span class="badge-count" id="totalExpirados">0</span>
+            </button>
+            <button class="btn-aba" data-aba="notificacoes" role="tab" aria-selected="false">
+                Notificações <span class="badge-count" id="totalNotificacoes">0</span>
+            </button>
+            <button class="btn-aba" data-aba="conversas" role="tab" aria-selected="false">
+                Conversas <span class="badge-count" id="totalConversas">0</span>
+            </button>
+        </div>
 
+        <div id="aba-ativos" class="painel-aba ativo" role="tabpanel">
+            <div id="listaAtivos" class="grid-anuncios"></div>
+        </div>
+
+        <div id="aba-expirados" class="painel-aba" role="tabpanel">
+            <div id="listaExpirados" class="grid-anuncios"></div>
+        </div>
+
+        <div id="aba-notificacoes" class="painel-aba" role="tabpanel">
+            <div class="notif-header">
+                <h3>Suas notificações</h3>
+                <button class="btn-marcar-lidas" onclick="marcarTodasNotificacoesLidas()">Marcar todas como lidas</button>
+            </div>
+            <div id="listaNotificacoes"></div>
+        </div>
+
+        <div id="aba-conversas" class="painel-aba" role="tabpanel">
+            <div class="notif-header">
+                <h3>Chats ativos</h3>
+            </div>
+            <div id="listaConversas"></div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>Copyright © 2026 - Liberô</p>
+    </footer>
+
+    <!-- Socket.io (requer servidor rodando) -->
+    <script src="/socket.io/socket.io.js" onerror="console.info('Socket.io não disponível — inicie o servidor com npm start')"></script>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/database.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/anuncios.js"></script>
+    <script src="../js/realtime.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tituloInput    = document.getElementById('tituloAnuncio');
+            const descricaoInput = document.getElementById('descricaoAnuncio');
+            if (tituloInput)    tituloInput.addEventListener('input',    () => { document.getElementById('contadorTitulo').textContent    = tituloInput.value.length; });
+            if (descricaoInput) descricaoInput.addEventListener('input', () => { document.getElementById('contadorDescricao').textContent = descricaoInput.value.length; });
+        });
+    </script>
 </body>
 </html>

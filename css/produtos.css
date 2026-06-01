@@ -1,63 +1,87 @@
-.produtos{
+.produtos {
     width: 90%;
-    margin: auto;
+    margin: 0 auto 40px auto;
 }
 
-.containerListagem{
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-flow: row wrap;
-    gap: 100px;
-    justify-content: center;
+.containerListagem {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
 }
 
-.produto img{
-    width: 100%;
-    height: 60%;
-    border-radius: 10px 10px 0 0;
-}
-
-.produto{
-    width: 350px;
-    height: auto;
-    border-radius: 10px;
-    background-color: white;
-    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+/* ── Card de produto ─────────────────────────────────────────────────────── */
+.produto {
+    background: white;
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
     cursor: pointer;
-
-}
-
-.containerProduto{
-    width: 90%;
-    height: 100%;
-    margin: auto;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 5px;
-
 }
 
-.containerProduto h4{
-    font-size: 1.5rem;
+.produto:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-.containerProduto p{
-    font-size: 1rem;
-    color: rgb(135, 135, 135);
-}
-
-.detalhes{
+.produto img {
     width: 100%;
+    height: 200px;
+    object-fit: contain;
+    display: block;
+}
+
+.containerProduto {
+    padding: 14px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.containerProduto h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--cor-texto);
+    line-height: 1.3;
+}
+
+.containerProduto p {
+    font-size: 0.85rem;
+    color: var(--cor-cinza);
+}
+
+.detalhes {
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid var(--cor-cinza-borda);
 }
 
-.detalhes a{
+.detalhes p {
+    font-size: 0.8rem;
+    color: var(--cor-cinza);
+}
+
+.detalhes a {
+    font-size: 0.85rem;
     font-weight: bold;
-    color: #00a11b;
+    color: var(--cor-primaria);
     text-decoration: none;
+    transition: color 0.2s;
+}
+
+.detalhes a:hover {
+    color: var(--cor-primaria-hover);
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+    .containerListagem {
+        grid-template-columns: 1fr;
+    }
 }

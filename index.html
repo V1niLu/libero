@@ -3,139 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liberô</title>
+    <meta name="description" content="Liberô - Anúncios classificados gratuitos. Encontre e publique itens para liberar espaço.">
+    <title>Liberô - Anúncios</title>
     <link rel="shortcut icon" href="img/icone.png" type="image/x-icon">
-
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/menu.css">
     <link rel="stylesheet" href="css/categoria.css">
     <link rel="stylesheet" href="css/destaque.css">
     <link rel="stylesheet" href="css/produtos.css">
     <link rel="stylesheet" href="css/footer.css">
-    <link rel="stylesheet" href="css/comprar.css">
-
 </head>
 <body>
 
-    <div id="comprar" class="comprar desativar">
-        <div class="fecharAnuncio" onclick="fecharCompra()">X</div>
-        <div class="containerCompra">
-            <div class="infoCompra">
-            
-            </div>
-            <div class="infoCompra">
+    <header>
+        <section id="menu" class="menu fixar">
+            <div class="containerM">
+                <a href="index.html"><img src="img/logo.png" alt="Liberô"></a>
+
+                <nav class="explorar">
+                    <a href="index.html">Explorar</a>
+                </nav>
+
+                <div class="pesquisa">
+                    <input type="text" id="inputPesquisa" placeholder="Pesquise por título ou descrição" aria-label="Pesquisar anúncios">
+                    <button onclick="document.getElementById('inputPesquisa').dispatchEvent(new Event('input'))">Pesquisar</button>
+                </div>
+
                 <div>
-                    <h2>Titulo</h2>
-                    <div>
-                        <p>categorias</p>
-                        <p>00 tempo restante</p>
-                    </div>
-                    <p>descrição completa</p>
-                    <p>quantidade</p>
-                    <p>Nome anunciante</p>
+                    <img src="./img/notificacao.svg" alt="Notificações">
                 </div>
-                <div>
-                    <h4>Ofertas</h4>
-                    <div class="oferta">
-                        <div>
-                            <div>
-                                <h5>Nome usuario</h5>
-                                <p>retirada</p>
-                            </div>
-                            <div>
-                                <h5>R$ 00,00</h5>
-                                <p>Status oferta</p>
-                            </div>
-                        </div>
-                        <p>mensagem para oferta</p>
-                    </div>
-                </div>
+
+                <nav class="perfilMenu" aria-label="Acesso ao perfil">
+                    <!-- preenchido por atualizarMenuPerfil() -->
+                </nav>
             </div>
-        </div>
-    </div>
+        </section>
+    </header>
 
-    <section id="menu" class="menu fixar">
-        <div class="containerM">
-            <img src="img/logo.png" alt="">
-
-            <div class="explorar">
-                <a href="index.html">Explorar</a>
+    <main>
+        <!-- Seção de destaques: anúncios com ≤ 30% de tempo restante -->
+        <section class="destaque" aria-label="Anúncios em destaque">
+            <div class="destaque-header">
+                <h2>Expirando em breve</h2>
             </div>
-
-            <div class="pesquisa">
-                <input type="text" placeholder="Faça sua pesquisa" name="" id="">
-                <button>Pesquisar</button>
+            <div id="listagemDestaque" class="containerDestaque">
+                <!-- renderizado por app.js -->
             </div>
+        </section>
 
-            <div>
-                <img src="./img/notificacao.svg" alt="">
-            </div>
-
-            <div class="perfilMenu">
-                <a href="pages/cadastro.html">Entre</a>
-                <p>ou</p>
-                <a href="pages/cadastro.html">Cadastre-se</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="destaque">
-        <div id="listagemDestaque" class="containerDestaque">
-            <div class="descricaoDestaque">
-                <h2>Titulo produto</h2>
-                <h4>unidades</h4>
-                <h4>local</h4>
-                <h4>tempo expiração</h4>
-                <div class="detalhesDestaque">
-                    <h4>0 lances</h4>
-                    <a href="">Ver detalhes</a>
+        <!-- Filtros -->
+        <section class="category" aria-label="Filtros de categoria">
+            <div class="filtros-topo">
+                <h3>Explorar itens do Liberô</h3>
+                <div class="filtros-ordem">
+                    <label for="selectOrdem">Ordenar:</label>
+                    <select id="selectOrdem" aria-label="Ordenar anúncios">
+                        <option value="recentes">Mais recentes</option>
+                        <option value="expirando">Expirando em breve</option>
+                    </select>
                 </div>
             </div>
-            <div class="imgProduto">
-                <img src="https://netsofas.vtexassets.com/arquivos/ids/194882/colosso-ambiente-linhosoft-prata.jpg?v=638718702283570000" alt="">
+            <div class="containerCategory">
+                <button class="btn-categoria ativo" data-categoria="todos">Todos</button>
+                <button class="btn-categoria" data-categoria="roupas">Roupas</button>
+                <button class="btn-categoria" data-categoria="livros">Livros</button>
+                <button class="btn-categoria" data-categoria="eletronicos">Eletrônicos</button>
+                <button class="btn-categoria" data-categoria="moveis">Móveis</button>
+                <button class="btn-categoria" data-categoria="utensilios">Utensílios</button>
+                <button class="btn-categoria" data-categoria="maquinas">Máquinas</button>
+                <button class="btn-categoria" data-categoria="entulho">Entulho</button>
+                <button class="btn-categoria" data-categoria="sucata">Sucata</button>
+                <button class="btn-categoria" data-categoria="construcao">Construção</button>
+                <button class="btn-categoria" data-categoria="refeicao">Refeição</button>
+                <button class="btn-categoria" data-categoria="outros">Outros</button>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="category">
-        <h3>Explorar itens de Liberô</h3>
-        <div class="containerCategory">
-            <p>Todos</p>
-            <p>Roupas</p>
-            <p>Livros</p>
-            <p>Eletrônicos</p>
-            <p>Móveis</p>
-            <p>Utensílios</p>
-            <p>Máquinas</p>
-            <p>Entulho</p>
-            <p>Sucata</p>
-            <p>Construção</p>
-            <p>Refeição</p>
-        </div>
-    </section>
-
-    <section class="produtos">
-        <div id="listagemProduto" class="containerListagem">
-            <div class="produto" onclick="abrirCompra()">
-                <img src="https://netsofas.vtexassets.com/arquivos/ids/194882/colosso-ambiente-linhosoft-prata.jpg?v=638718702283570000" alt="">  
-                <div class="containerProduto">
-                    <h4>Titulo produto</h4>
-                    <p>unidades</p>
-                    <p>local</p>
-                    <p>tempo expiração</p>
-                    <div class="detalhes">
-                        <p>0 lances</p>
-                        <a href="">Ver detalhes</a>
-                    </div>
-                </div>
+        <!-- Listagem de anúncios -->
+        <section class="produtos" aria-label="Listagem de anúncios">
+            <div id="listagemProduto" class="containerListagem">
+                <!-- renderizado por app.js -->
             </div>
-    </section>
+        </section>
+    </main>
 
-    <section class="footer">
-            <p>Copyright © 2026 - Liberô</p>
-    </section>
-    
-    <script src="./js/mainPage.js"></script>
+    <footer class="footer">
+        <p>Copyright © 2026 - Liberô</p>
+    </footer>
 
+    <!-- Socket.io (requer servidor rodando) -->
+    <script src="/socket.io/socket.io.js" onerror="console.info('Socket.io não disponível — inicie o servidor com npm start')"></script>
+
+    <script src="./js/utils.js"></script>
+    <script src="./js/database.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/anuncios.js"></script>
+    <script src="./js/realtime.js"></script>
+    <script src="./js/app.js"></script>
 </body>
 </html>

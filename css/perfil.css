@@ -1,157 +1,872 @@
-body{
+/* ── Layout base ─────────────────────────────────────────────────────────── */
+body {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-label{
-    font-size: 1.1rem;
+label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--cor-texto);
+    margin-bottom: 4px;
+    display: block;
 }
 
-input{
+input, textarea, select {
     font-size: 1rem;
-    width: 80%;
-    height: 15px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    color: #636363;
-    margin-bottom: 30px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--cor-cinza-borda);
+    border-radius: 8px;
+    color: var(--cor-texto);
+    background: white;
+    transition: border-color 0.2s;
+    margin-bottom: 4px;
 }
 
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 0 3px rgba(0, 161, 27, 0.12);
+}
 
-textarea{
-    width: 80%;
+textarea {
     height: 100px;
-    padding: 10px;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    color: #636363;
-    margin-bottom: 30px;
+    resize: vertical;
 }
 
-.anuncio{
+.contador-chars {
+    display: block;
+    text-align: right;
+    font-size: 0.78rem;
+    color: var(--cor-cinza);
+    margin-bottom: 14px;
+}
+
+/* ── Modal de anúncio ────────────────────────────────────────────────────── */
+.anuncio {
     width: 100%;
     height: 100%;
-    margin: auto;
-    background-color: #000000c2;
-    filter: blur(1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     position: fixed;
-}
-
-.anuncio button{
-    width: 70%;
-    height: 50px;
-}
-
-.containerAnuncio{
-    width: 700px;
-    height: 90%;
-    background-color: #FFF;
-    border-radius: 20px;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 20px;
-    align-items: center;
-    justify-content: center;
 }
 
-.upload{
-    width: 80%;
-    height: auto;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    align-items: center;
-}
-
-.uploadImg{
-    width: 40%;
-    height: 200px;
-    border: 2px dashed #ccc;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px auto;
-}
-
-.uploadImgConcluidas{
-    width: 45%;
-    height: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.desativar{
-    display: none;
-}
-
-.uploadImgConcluidas img{
-    height: 60px;
-}
-
-.opcoesAnuncio{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 80%;
-    height: auto;
-    margin-bottom: 20px;
-}
-
-.infoAnuncio{
-    width: 48%;
-    display: flex;
-    flex-direction: column;
-}
-
-select{
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    background-color: transparent;
-    padding: 10px;
-    margin: 5px 0 0 0;
-    border-radius: 5px;
-}
-
-.itensAnuncio{
-    display: flex;
-    flex-direction: column;
-    margin: 100px auto 0px auto;
-    width: 90%;
-    height: 100%;
-}
-
-.itensAnuncio div{
+.containerAnuncio {
     width: 100%;
-    height: auto;
-    padding: 20px 0px;
+    max-width: 680px;
+    max-height: 90vh;
+    background: white;
+    border-radius: 16px;
     display: flex;
-    flex-wrap: wrap;
-    border-bottom: 1px solid #e2e2e2;
-}
-
-.itensAnuncio button{
-    width: 30%;
-    margin: 20px auto 0 auto;
-}
-
-.bloquear{
+    flex-direction: column;
+    padding: 28px 32px;
+    overflow-y: auto;
     position: relative;
 }
 
-.fecharAnuncio{
+.containerAnuncio h2 {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: var(--cor-texto);
+}
+
+.fecharAnuncio {
     position: absolute;
-    margin: 0px 0px 800px 600px;
+    top: 16px;
+    right: 16px;
+}
+
+/* ── Upload de imagens ───────────────────────────────────────────────────── */
+.upload {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.uploadImg {
+    width: 160px;
+    height: 120px;
+    border: 2px dashed var(--cor-cinza-borda);
+    border-radius: var(--raio);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    flex-shrink: 0;
+    text-align: center;
+    padding: 10px;
+}
+
+.uploadImg:hover {
+    border-color: var(--cor-primaria);
+    background: #f0fdf4;
+}
+
+.uploadImg span {
+    font-size: 0.85rem;
+    color: var(--cor-cinza);
+    pointer-events: none;
+}
+
+.uploadImgConcluidas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex: 1;
+}
+
+.preview-img {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.preview-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.preview-img button {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--cor-erro);
+    font-size: 0.75rem;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Opções do anúncio ───────────────────────────────────────────────────── */
+.opcoesAnuncio {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.infoAnuncio {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-publicar {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.05rem;
+    margin-top: 10px;
+}
+
+/* ── Perfil header ───────────────────────────────────────────────────────── */
+.itensAnuncio {
+    flex: 1;
+    width: 90%;
+    margin: 90px auto 0 auto;
+    padding-bottom: 40px;
+}
+
+.perfil-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--cor-cinza-borda);
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.perfil-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.perfil-avatar {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    background: var(--cor-cinza-claro);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.perfil-info h2 {
+    font-size: 1.4rem;
+}
+
+.perfil-info p {
+    font-size: 0.85rem;
+    color: var(--cor-cinza);
+}
+
+.btn-novo-anuncio {
+    padding: 12px 24px;
+    font-size: 1rem;
+    background: var(--cor-primaria);
+}
+
+.btn-excluir-conta {
+    padding: 10px 18px;
+    font-size: 0.85rem;
+    background: none;
+    color: var(--cor-erro);
+    border: 1px solid var(--cor-erro);
+    font-weight: 500;
+}
+
+.btn-excluir-conta:hover {
+    background: var(--cor-erro);
+    color: white;
+}
+
+/* ── Abas ────────────────────────────────────────────────────────────────── */
+.abas {
+    display: flex;
+    gap: 4px;
+    border-bottom: 2px solid var(--cor-cinza-borda);
+    margin-bottom: 24px;
+}
+
+.btn-aba {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--cor-cinza);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+    border-radius: 0;
+}
+
+.btn-aba:hover {
+    color: var(--cor-primaria);
+    background: none;
+}
+
+.btn-aba.ativa {
+    color: var(--cor-primaria);
+    border-bottom-color: var(--cor-primaria);
+    background: none;
+}
+
+.badge-count {
+    background: var(--cor-cinza-claro);
+    color: var(--cor-cinza);
+    border-radius: 10px;
+    padding: 1px 8px;
+    font-size: 0.78rem;
+}
+
+.btn-aba.ativa .badge-count {
+    background: #dcfce7;
+    color: var(--cor-primaria);
+}
+
+.painel-aba {
+    display: none;
+}
+
+.painel-aba.ativo {
+    display: block;
+}
+
+/* ── Grid de cards ───────────────────────────────────────────────────────── */
+.grid-anuncios {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* ── Card perfil ─────────────────────────────────────────────────────────── */
+.card-perfil {
+    background: white;
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s ease;
+}
+
+.card-perfil:hover {
+    transform: translateY(-2px);
+}
+
+.card-perfil.expirado {
+    filter: grayscale(100%);
+    pointer-events: none;
+    opacity: 0.75;
+}
+
+.card-perfil.expirado .card-perfil-acoes {
+    pointer-events: all;
+}
+
+.card-perfil-img {
+    position: relative;
+    height: 160px;
+    overflow: hidden;
+}
+
+.card-perfil-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.card-perfil-img .badge-expirado,
+.card-perfil-img .badge-destaque {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.card-perfil-info {
+    padding: 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.card-perfil-info h4 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--cor-texto);
+}
+
+.card-perfil-info p {
+    font-size: 0.85rem;
+    color: var(--cor-cinza);
+}
+
+/* ── Ações do card ───────────────────────────────────────────────────────── */
+.card-perfil-acoes {
+    display: flex;
+    gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--cor-cinza-borda);
+    flex-wrap: wrap;
+}
+
+.btn-editar {
+    flex: 1;
+    padding: 8px;
+    font-size: 0.85rem;
+    background: var(--cor-azul);
+    min-width: 70px;
+}
+
+.btn-editar:hover {
+    background: #1d4ed8;
+}
+
+.btn-excluir {
+    flex: 1;
+    padding: 8px;
+    font-size: 0.85rem;
+    background: var(--cor-erro);
+    min-width: 70px;
+}
+
+.btn-excluir:hover {
+    background: #b91c1c;
+}
+
+.btn-ver {
+    flex: 1;
+    padding: 8px;
+    font-size: 0.85rem;
+    background: var(--cor-primaria);
+    color: white;
+    text-decoration: none;
+    border-radius: var(--raio);
+    font-weight: bold;
+    text-align: center;
+    min-width: 70px;
+    transition: background 0.2s;
+}
+
+.btn-ver:hover {
+    background: var(--cor-primaria-hover);
+}
+
+/* ── Badge ONG ───────────────────────────────────────────────────────────── */
+.badge-ong-card {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #7c3aed;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+.texto-horario {
+    font-size: 0.8rem;
+    color: var(--cor-azul);
+    font-weight: 500;
+}
+
+/* ── Checkbox label ──────────────────────────────────────────────────────── */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 6px 0;
+    margin-bottom: 8px;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin: 0;
+    accent-color: var(--cor-primaria);
+}
+
+/* ── Botão propostas no card ─────────────────────────────────────────────── */
+.btn-propostas {
+    flex: 1;
+    padding: 8px;
+    font-size: 0.8rem;
+    background: #f3f4f6;
+    color: var(--cor-texto);
+    border: 1px solid var(--cor-cinza-borda);
+    min-width: 80px;
+}
+
+.btn-propostas:hover {
+    background: #e5e7eb;
+}
+
+.btn-propostas-destaque {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #92400e;
+}
+
+.btn-propostas-destaque:hover {
+    background: #fde68a;
+}
+
+/* ── Container do modal de propostas ────────────────────────────────────── */
+.containerPropostas {
+    max-height: 80vh;
+    overflow-y: auto;
+    gap: 0;
+}
+
+.containerPropostas h2 {
+    margin-bottom: 16px;
+}
+
+/* ── Item de proposta (no modal) ─────────────────────────────────────────── */
+.item-proposta {
+    padding: 14px;
+    border: 1px solid var(--cor-cinza-borda);
+    border-radius: var(--raio);
+    margin-bottom: 10px;
+    background: #fafafa;
+}
+
+.proposta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.proposta-tipo {
+    font-size: 0.9rem;
+    color: var(--cor-cinza);
+    margin-bottom: 4px;
+}
+
+.proposta-data {
+    font-size: 0.78rem;
+    color: #9ca3af;
+    margin-bottom: 8px;
+}
+
+.status-proposta {
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 10px;
+    border-radius: 20px;
+}
+
+.status-pendente  { background: #fef3c7; color: #92400e; }
+.status-aceita    { background: #dcfce7; color: #166534; }
+.status-recusada  { background: #fee2e2; color: #991b1b; }
+
+.proposta-acoes {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.btn-aceitar {
+    flex: 1;
+    padding: 7px;
+    font-size: 0.85rem;
+    background: var(--cor-primaria);
+}
+
+.btn-aceitar:hover { background: var(--cor-primaria-hover); }
+
+.btn-recusar {
+    flex: 1;
+    padding: 7px;
+    font-size: 0.85rem;
+    background: var(--cor-erro);
+}
+
+.btn-recusar:hover { background: #b91c1c; }
+
+/* ── Notificações ────────────────────────────────────────────────────────── */
+.notif-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.notif-header h3 {
+    font-size: 1.1rem;
+}
+
+.btn-marcar-lidas {
+    font-size: 0.85rem;
+    padding: 8px 14px;
+    background: var(--cor-cinza-claro);
+    color: var(--cor-texto);
+    border: 1px solid var(--cor-cinza-borda);
+}
+
+.btn-marcar-lidas:hover {
+    background: var(--cor-cinza-borda);
+}
+
+.item-notif {
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+    border-radius: var(--raio);
+    margin-bottom: 8px;
+    border: 1px solid var(--cor-cinza-borda);
+    cursor: pointer;
+    transition: background 0.15s;
+    align-items: flex-start;
+}
+
+.item-notif.nao-lida {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.item-notif.lida {
+    background: white;
+    opacity: 0.75;
+}
+
+.item-notif:hover {
+    background: #f9fafb;
+}
+
+.notif-icone {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+.notif-corpo {
+    flex: 1;
+}
+
+.notif-corpo p {
+    font-size: 0.9rem;
+    margin-bottom: 3px;
+}
+
+.notif-anuncio {
+    color: var(--cor-cinza);
+    font-size: 0.82rem;
+}
+
+.notif-data {
+    color: #9ca3af;
+    font-size: 0.78rem;
+}
+
+.notif-ponto {
+    width: 8px;
+    height: 8px;
+    background: var(--cor-azul);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+}
+
+/* ── Badge de notificação no menu ────────────────────────────────────────── */
+.badge-notif {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--cor-erro);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: bold;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-left: 3px;
+    vertical-align: middle;
+}
+
+/* ── Ações do perfil header ──────────────────────────────────────────────── */
+.perfil-acoes {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ── Cards de conversas ──────────────────────────────────────────────────── */
+.conversa-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: white;
+    border: 1px solid var(--cor-cinza-borda);
+    border-radius: var(--raio);
+    margin-bottom: 10px;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.conversa-card:hover {
+    box-shadow: var(--sombra);
+    border-color: #d1d5db;
+}
+
+.conversa-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.conversa-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.conversa-info h4 {
+    margin: 0 0 3px;
+    font-size: 0.93rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.conversa-info p {
+    font-size: 0.8rem;
+    color: var(--cor-cinza);
+    margin: 0;
+}
+
+.conversa-papel {
+    font-size: 0.73rem;
+    background: var(--cor-cinza-claro);
+    color: var(--cor-cinza);
+    padding: 3px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.btn-abrir-chat {
+    padding: 8px 16px;
+    background: var(--cor-primaria);
+    color: white;
+    border-radius: var(--raio);
+    text-decoration: none;
+    font-size: 0.83rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.btn-abrir-chat:hover {
+    background: var(--cor-primaria-hover);
+}
+
+/* Botão chat inline em propostas e notificações */
+.btn-chat-prop,
+.btn-chat-notif {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+    margin-top: 6px;
+}
+
+.btn-chat-prop:hover,
+.btn-chat-notif:hover {
+    background: #bfdbfe;
+}
+
+/* ── Card em negociação ativo ────────────────────────────────────────────── */
+.card-perfil.negociando {
+    border: 2px solid #f59e0b;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+
+/* ── Seção de negociação final no card ───────────────────────────────────── */
+.card-perfil-negociacao {
+    padding: 12px 14px;
+    border-top: 1px solid var(--cor-cinza-borda);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card-perfil.expirado .card-perfil-negociacao {
+    pointer-events: all;
+}
+
+.neg-titulo {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #92400e;
+}
+
+.neg-info {
+    font-size: 0.85rem;
+    color: var(--cor-texto);
+}
+
+.neg-aguardando {
+    font-size: 0.83rem;
+    color: var(--cor-cinza);
+    font-style: italic;
+}
+
+.neg-acoes,
+.neg-acoes-notif {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-confirmar-neg {
+    flex: 1;
+    padding: 7px;
+    font-size: 0.82rem;
+    background: var(--cor-primaria);
+}
+
+.btn-confirmar-neg:hover { background: var(--cor-primaria-hover); }
+
+.btn-recusar-neg {
+    flex: 1;
+    padding: 7px;
+    font-size: 0.82rem;
+    background: var(--cor-erro);
+}
+
+.btn-recusar-neg:hover { background: #b91c1c; }
+
+.neg-concluido {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
+.neg-sem-acordo {
+    font-size: 0.85rem;
+    color: #991b1b;
+}
+
+/* ── Botão cancelar proposta (comprador na detalhes page) ────────────────── */
+.btn-cancelar-proposta {
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px;
+    font-size: 0.85rem;
+    background: var(--cor-cinza-claro);
+    color: var(--cor-texto);
+    border: 1px solid var(--cor-cinza-borda);
+}
+
+.btn-cancelar-proposta:hover {
+    background: #fee2e2;
+    border-color: var(--cor-erro);
+    color: var(--cor-erro);
+}
+
+/* ── Responsivo ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .containerAnuncio {
+        padding: 20px;
+    }
+
+    .opcoesAnuncio {
+        flex-direction: column;
+    }
+
+    .perfil-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .grid-anuncios {
+        grid-template-columns: 1fr;
+    }
+
+    .conversa-card {
+        flex-wrap: wrap;
+    }
+
+    .conversa-papel {
+        order: -1;
+    }
 }
