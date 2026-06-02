@@ -109,7 +109,7 @@ function atualizarMenuPerfil() {
         perfilMenu.innerHTML = `
             <a href="${base}pages/cadastro.html">Entre</a>
             <p>ou</p>
-            <a href="${base}pages/cadastro.html">Cadastre-se</a>
+            <a href="${base}pages/cadastro.html#cadastro">Cadastre-se</a>
         `;
     }
 }

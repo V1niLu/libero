@@ -199,7 +199,7 @@
     </main>
 
     <footer class="footer">
-        <p>Copyright © 2026 - Liberô</p>
+        <p>2026 - Liberô</p>
     </footer>
 
     <!-- Socket.io (requer servidor rodando) -->
@@ -211,13 +211,5 @@
     <script src="../js/anuncios.js"></script>
     <script src="../js/realtime.js"></script>
     <script src="../js/app.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const tituloInput    = document.getElementById('tituloAnuncio');
-            const descricaoInput = document.getElementById('descricaoAnuncio');
-            if (tituloInput)    tituloInput.addEventListener('input',    () => { document.getElementById('contadorTitulo').textContent    = tituloInput.value.length; });
-            if (descricaoInput) descricaoInput.addEventListener('input', () => { document.getElementById('contadorDescricao').textContent = descricaoInput.value.length; });
-        });
-    </script>
 </body>
 </html>

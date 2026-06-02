@@ -192,8 +192,21 @@ function configurarPesquisa() {
 // CADASTRO / LOGIN
 // ══════════════════════════════════════════════════════════════════════════════
 
+function transicaoCadastro() {
+    const el = document.getElementById('trasicao');
+    el.classList.remove('loginTransition');
+    el.classList.add('cadastroTransition');
+}
+
+function transitionLogin() {
+    const el = document.getElementById('trasicao');
+    el.classList.remove('cadastroTransition');
+    el.classList.add('loginTransition');
+}
+
 function initCadastro() {
     if (estaLogado()) { window.location.href = 'perfil.html'; return; }
+    if (window.location.hash === '#cadastro') transicaoCadastro();
 
     // Dinâmica do campo tipoPerfil → nomeInstituicao
     const selectTipo = document.getElementById('tipoPerfil');
@@ -275,6 +288,15 @@ function initPerfil() {
     atualizarBadgeNotif();
     inicializarRealtime();
     _processarNovasExpiracoes();
+
+    const tituloInput = document.getElementById('tituloAnuncio');
+    const descricaoInput = document.getElementById('descricaoAnuncio');
+    if (tituloInput) tituloInput.addEventListener('input', () => {
+        document.getElementById('contadorTitulo').textContent = tituloInput.value.length;
+    });
+    if (descricaoInput) descricaoInput.addEventListener('input', () => {
+        document.getElementById('contadorDescricao').textContent = descricaoInput.value.length;
+    });
 }
 
 // ── Renderização dos anúncios no perfil ───────────────────────────────────────
@@ -442,7 +464,7 @@ function configurarFormAnuncio() {
 
         if (resultado.sucesso) {
             mostrarFeedback('feedbackAnuncio', anuncioEmEdicao ? 'Anúncio atualizado!' : 'Anúncio publicado!', 'success');
-            setTimeout(() => { fecharModalAnuncio(); renderizarAnunciosPerfil(); }, 800);
+            setTimeout(() => { fecharAnuncio(); renderizarAnunciosPerfil(); }, 800);
         } else {
             mostrarFeedback('feedbackAnuncio', resultado.erro, 'error');
         }
@@ -490,9 +512,7 @@ function addAnuncio() {
     document.getElementById('menu')?.classList.remove('fixar');
 }
 
-function fecharAnuncio() { fecharModalAnuncio(); }
-
-function fecharModalAnuncio() {
+function fecharAnuncio() {
     document.getElementById('anuncio').classList.add('desativar');
     document.getElementById('menu')?.classList.add('fixar');
     anuncioEmEdicao = null;
@@ -805,8 +825,6 @@ function atualizarBadgeNotif() {
     const usuario = getUsuarioLogado();
     if (!usuario) return;
     const naoLidas = contarNaoLidas(usuario.usuarioId);
-    const badgeEl  = document.getElementById('badgeNotif');
-    if (badgeEl) badgeEl.textContent = naoLidas > 0 ? naoLidas : '';
     const totalEl  = document.getElementById('totalNotificacoes');
     if (totalEl) totalEl.textContent = naoLidas > 0 ? naoLidas : getNotificacoesByDestinatario(usuario.usuarioId).length;
 }
@@ -1178,10 +1196,6 @@ function moverCarrossel(direcao) {
     if (slides.length === 0) return;
     irParaSlide(indiceCarrossel + direcao);
 }
-
-// ══════════════════════════════════════════════════════════════════════════════
-// CONVERSAS (aba no perfil)
-// ══════════════════════════════════════════════════════════════════════════════
 
 // ══════════════════════════════════════════════════════════════════════════════
 // EXCLUSÃO DE CONTA
