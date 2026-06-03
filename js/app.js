@@ -100,36 +100,33 @@ let _carrosselTotal = 0;
 function renderizarDestaquesResponsivo(destaques, container) {
     pararCarrosselDestaque();
 
-    if (destaques.length <= 3) {
-        _carrosselTotal = destaques.length;
-        _carrosselAtual = 0;
+    // Sempre usa carrossel: se > 10 destaques, mostra apenas os 10 primeiros
+    const destaquesExibidos = destaques.slice(0, 10);
+    _carrosselTotal = destaquesExibidos.length;
+    _carrosselAtual = 0;
 
-        container.innerHTML = `
-            <div class="carrossel-destaque-wrapper" id="carrosselDestaqueWrapper">
-                <div class="carrossel-destaque-slides">
-                    ${destaques.map((a, i) => `
-                        <div class="slide-destaque ${i === 0 ? 'ativo' : ''}" data-idx="${i}">
-                            ${renderizarCardDestaque(a)}
-                        </div>
-                    `).join('')}
-                </div>
-                ${destaques.length > 1 ? `
-                <div class="carrossel-dots" id="carrosselDots">
-                    ${destaques.map((_, i) => `
-                        <button class="dot ${i === 0 ? 'ativo' : ''}" onclick="irParaSlideDestaque(${i})" aria-label="Slide ${i + 1}"></button>
-                    `).join('')}
-                </div>` : ''}
-            </div>`;
+    container.innerHTML = `
+        <div class="carrossel-destaque-wrapper" id="carrosselDestaqueWrapper">
+            <div class="carrossel-destaque-slides">
+                ${destaquesExibidos.map((a, i) => `
+                    <div class="slide-destaque ${i === 0 ? 'ativo' : ''}" data-idx="${i}">
+                        ${renderizarCardDestaque(a)}
+                    </div>
+                `).join('')}
+            </div>
+            ${destaquesExibidos.length > 1 ? `
+            <div class="carrossel-dots" id="carrosselDots">
+                ${destaquesExibidos.map((_, i) => `
+                    <button class="dot ${i === 0 ? 'ativo' : ''}" onclick="irParaSlideDestaque(${i})" aria-label="Slide ${i + 1}"></button>
+                `).join('')}
+            </div>` : ''}
+        </div>`;
 
-        const wrapper = document.getElementById('carrosselDestaqueWrapper');
-        if (wrapper && destaques.length > 1) {
-            wrapper.addEventListener('mouseenter', pararCarrosselDestaque);
-            wrapper.addEventListener('mouseleave', () => iniciarCarrosselDestaque());
-            iniciarCarrosselDestaque();
-        }
-    } else {
-        // Grid estático para > 3 destaques
-        container.innerHTML = destaques.map(renderizarCardDestaque).join('');
+    const wrapper = document.getElementById('carrosselDestaqueWrapper');
+    if (wrapper && destaquesExibidos.length > 1) {
+        wrapper.addEventListener('mouseenter', pararCarrosselDestaque);
+        wrapper.addEventListener('mouseleave', () => iniciarCarrosselDestaque());
+        iniciarCarrosselDestaque();
     }
 }
 
