@@ -11,6 +11,16 @@ function inicializarDB() {
     // Garante campo notificacoes para DBs antigos
     if (!db.notificacoes) { db.notificacoes = []; dirty = true; }
 
+    // Garante campos de endereço no perfil para DBs antigos
+    (db.usuarios || []).forEach(usuario => {
+        if (usuario.telefone === undefined) usuario.telefone = '';
+        if (usuario.cep === undefined) usuario.cep = '';
+        if (usuario.rua === undefined) usuario.rua = '';
+        if (usuario.numero === undefined) usuario.numero = '';
+        if (usuario.cidade === undefined) usuario.cidade = '';
+        if (usuario.estado === undefined) usuario.estado = '';
+    });
+
     // Garante propostas[], endereco e situacao em anuncios; id/status em propostas
     (db.anuncios || []).forEach(anuncio => {
         if (!anuncio.propostas)         { anuncio.propostas  = [];                              dirty = true; }

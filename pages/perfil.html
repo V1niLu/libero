@@ -94,10 +94,6 @@
                 <label for="volumeAnuncio">Volume / Quantidade <span class="obrigatorio">*</span></label>
                 <input type="text" id="volumeAnuncio" placeholder="Ex: 2 sacolas grandes, 10 unidades..." required>
 
-                <!-- Endereço -->
-                <label for="enderecoAnuncio">Endereço para retirada <span class="obrigatorio">*</span></label>
-                <input type="text" id="enderecoAnuncio" placeholder="Ex: Rua das Flores, 123 — Bairro, Cidade" maxlength="200" required>
-
                 <button type="submit" class="btn-publicar">Publicar anúncio</button>
             </form>
         </div>
@@ -165,6 +161,9 @@
             <button class="btn-aba" data-aba="liberados" role="tab" aria-selected="false">
                 Liberados <span class="badge-count" id="totalLiberados">0</span>
             </button>
+            <button class="btn-aba" data-aba="editar" role="tab" aria-selected="false">
+                Editar perfil
+            </button>
         </div>
 
         <div id="aba-ativos" class="painel-aba ativo" role="tabpanel">
@@ -195,6 +194,38 @@
                 <h3>Anúncios liberados</h3>
             </div>
             <div id="listaLiberados" class="grid-anuncios"></div>
+        </div>
+
+        <div id="aba-editar" class="painel-aba" role="tabpanel">
+            <div class="notif-header">
+                <h3>Editar informações do perfil</h3>
+            </div>
+            <form id="formPerfil" novalidate>
+                <div id="feedbackPerfil" class="feedback" style="display:none" role="alert"></div>
+                <p class="texto-info">Cadastre nome, telefone, CEP, rua, número, cidade e estado. O CEP preenche rua, cidade e estado automaticamente.</p>
+                <label for="nomePerfil">Nome completo</label>
+                <input type="text" id="nomePerfil" placeholder="Seu nome" required>
+
+                <label for="telefonePerfil">Telefone</label>
+                <input type="tel" id="telefonePerfil" placeholder="(00) 00000-0000">
+
+                <label for="cepPerfil">CEP</label>
+                <input type="text" id="cepPerfil" placeholder="00000-000" maxlength="9" required>
+
+                <label for="ruaPerfil">Rua</label>
+                <input type="text" id="ruaPerfil" placeholder="Nome da rua" required>
+
+                <label for="numeroPerfil">Número</label>
+                <input type="text" id="numeroPerfil" placeholder="Número">
+
+                <label for="cidadePerfil">Cidade</label>
+                <input type="text" id="cidadePerfil" placeholder="Cidade" required>
+
+                <label for="estadoPerfil">Estado</label>
+                <input type="text" id="estadoPerfil" placeholder="UF" maxlength="2" required>
+
+                <button type="submit" class="btn-publicar">Salvar perfil</button>
+            </form>
         </div>
     </main>
 

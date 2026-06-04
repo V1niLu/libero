@@ -13,7 +13,13 @@ function fazerLogin(email, senha) {
         nome:            usuario.nome,
         email:           usuario.email,
         tipoPerfil:      usuario.tipoPerfil || 'comum',
-        nomeInstituicao: usuario.nomeInstituicao || null
+        nomeInstituicao: usuario.nomeInstituicao || null,
+        telefone:        usuario.telefone || '',
+        cep:             usuario.cep || '',
+        rua:             usuario.rua || '',
+        numero:          usuario.numero || '',
+        cidade:          usuario.cidade || '',
+        estado:          usuario.estado || ''
     };
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(sessao));
     return { sucesso: true, usuario: sessao };
@@ -42,7 +48,13 @@ function fazerCadastro(nome, email, senha, confirmacao, tipoPerfil, nomeInstitui
         senha:           hashSenha(senha),
         dataCadastro:    Date.now(),
         tipoPerfil:      tipo,
-        nomeInstituicao: tipo === 'ong' ? nomeInstituicao.trim() : null
+        nomeInstituicao: tipo === 'ong' ? nomeInstituicao.trim() : null,
+        telefone:        '',
+        cep:             '',
+        rua:             '',
+        numero:          '',
+        cidade:          '',
+        estado:          ''
     };
 
     salvarUsuario(usuario);
@@ -52,7 +64,13 @@ function fazerCadastro(nome, email, senha, confirmacao, tipoPerfil, nomeInstitui
         nome:            usuario.nome,
         email:           usuario.email,
         tipoPerfil:      usuario.tipoPerfil,
-        nomeInstituicao: usuario.nomeInstituicao
+        nomeInstituicao: usuario.nomeInstituicao,
+        telefone:        usuario.telefone,
+        cep:             usuario.cep,
+        rua:             usuario.rua,
+        numero:          usuario.numero,
+        cidade:          usuario.cidade,
+        estado:          usuario.estado
     };
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(sessao));
     return { sucesso: true, usuario: sessao };

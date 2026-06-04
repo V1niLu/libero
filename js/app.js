@@ -2,6 +2,146 @@
 
 let _recemExpiradosIds = [];
 
+function formatarEnderecoPerfil(usuario) {
+    if (!usuario) return '';
+    const cep = usuario.cep ? usuario.cep.trim() : '';
+    const rua = usuario.rua ? usuario.rua.trim() : '';
+    const numero = usuario.numero ? usuario.numero.trim() : '';
+    const cidade = usuario.cidade ? usuario.cidade.trim() : '';
+    const estado = usuario.estado ? usuario.estado.trim().toUpperCase() : '';
+    if (!cep || !rua || !numero || !cidade || !estado) return '';
+    return `${rua}, ${numero} - ${cidade}/${estado} · CEP ${cep}`;
+}
+
+function temEnderecoPerfilCompleto(usuario) {
+    return !!(usuario && usuario.cep && usuario.rua && usuario.numero && usuario.cidade && usuario.estado);
+}
+
+function atualizarSessaoUsuario(usuario) {
+    if (!usuario) return;
+    const sessao = {
+        usuarioId: usuario.id || usuario.usuarioId,
+        nome: usuario.nome || '',
+        email: usuario.email || '',
+        tipoPerfil: usuario.tipoPerfil || 'comum',
+        nomeInstituicao: usuario.nomeInstituicao || null,
+        telefone: usuario.telefone || '',
+        cep: usuario.cep || '',
+        rua: usuario.rua || '',
+        numero: usuario.numero || '',
+        cidade: usuario.cidade || '',
+        estado: usuario.estado || ''
+    };
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(sessao));
+}
+
+async function buscarEnderecoPorCEP(cep) {
+    const cepSomenteDigitos = cep.replace(/\D/g, '');
+    if (cepSomenteDigitos.length !== 8) {
+        throw new Error('CEP inválido.');
+    }
+    const response = await fetch(`https://viacep.com.br/ws/${cepSomenteDigitos}/json/`);
+    if (!response.ok) {
+        throw new Error('Não foi possível buscar o CEP.');
+    }
+    const data = await response.json();
+    if (data.erro) {
+        throw new Error('CEP não encontrado.');
+    }
+    return data;
+}
+
+function carregarDadosPerfil() {
+    const usuario = getUsuarioLogado();
+    if (!usuario) return;
+
+    if (document.getElementById('nomePerfil')) document.getElementById('nomePerfil').value = usuario.nome || '';
+    if (document.getElementById('telefonePerfil')) document.getElementById('telefonePerfil').value = usuario.telefone || '';
+    if (document.getElementById('cepPerfil')) document.getElementById('cepPerfil').value = usuario.cep || '';
+    if (document.getElementById('ruaPerfil')) document.getElementById('ruaPerfil').value = usuario.rua || '';
+    if (document.getElementById('numeroPerfil')) document.getElementById('numeroPerfil').value = usuario.numero || '';
+    if (document.getElementById('cidadePerfil')) document.getElementById('cidadePerfil').value = usuario.cidade || '';
+    if (document.getElementById('estadoPerfil')) document.getElementById('estadoPerfil').value = usuario.estado || '';
+
+    if (!temEnderecoPerfilCompleto(usuario)) {
+        mostrarFeedback('feedbackPerfil', 'Atualize CEP, rua, número, cidade e estado para habilitar os filtros por cidade/CEP nos anúncios.', 'info');
+    }
+}
+
+function configurarFormularioPerfil() {
+    const form = document.getElementById('formPerfil');
+    if (!form) return;
+
+    const cepInput = document.getElementById('cepPerfil');
+    if (cepInput) {
+        cepInput.addEventListener('blur', async () => {
+            const cep = cepInput.value.replace(/\D/g, '');
+            if (!cep) return;
+            try {
+                const endereco = await buscarEnderecoPorCEP(cep);
+                document.getElementById('ruaPerfil').value = endereco.logradouro || '';
+                document.getElementById('cidadePerfil').value = endereco.localidade || '';
+                document.getElementById('estadoPerfil').value = (endereco.uf || '').toUpperCase();
+                mostrarFeedback('feedbackPerfil', 'Rua, cidade e estado atualizados automaticamente.', 'success');
+            } catch (erro) {
+                mostrarFeedback('feedbackPerfil', erro.message, 'error');
+            }
+        });
+    }
+
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+        const usuario = getUsuarioLogado();
+        if (!usuario) return;
+
+        const nome = document.getElementById('nomePerfil').value.trim();
+        const telefone = document.getElementById('telefonePerfil').value.trim();
+        const cep = document.getElementById('cepPerfil').value.trim();
+        const rua = document.getElementById('ruaPerfil').value.trim();
+        const numero = document.getElementById('numeroPerfil').value.trim();
+        const cidade = document.getElementById('cidadePerfil').value.trim();
+        const estado = document.getElementById('estadoPerfil').value.trim().toUpperCase();
+
+        if (!nome || !cep || !rua || !cidade || !estado) {
+            mostrarFeedback('feedbackPerfil', 'Preencha os campos obrigatórios de perfil antes de salvar.', 'error');
+            return;
+        }
+
+        const dadosUsuario = {
+            nome,
+            telefone,
+            cep,
+            rua,
+            numero,
+            cidade,
+            estado
+        };
+
+        if (!/^[0-9]{5}-?[0-9]{3}$/.test(cep)) {
+            mostrarFeedback('feedbackPerfil', 'CEP deve conter 8 dígitos.', 'error');
+            return;
+        }
+
+        const atualizado = atualizarUsuario(usuario.usuarioId, dadosUsuario);
+        if (atualizado) {
+            const usuarioAtualizado = buscarUsuarioPorId(usuario.usuarioId);
+            atualizarSessaoUsuario(usuarioAtualizado);
+            atualizarMenuPerfil();
+
+            const enderecoAtualizado = formatarEnderecoPerfil(usuarioAtualizado);
+            if (enderecoAtualizado) {
+                getAnunciosPorUsuario(usuario.usuarioId)
+                    .filter(a => a.ativo)
+                    .forEach(a => atualizarAnuncio(a.id, { endereco: enderecoAtualizado }));
+            }
+
+            mostrarFeedback('feedbackPerfil', 'Perfil atualizado com sucesso.', 'success');
+        } else {
+            mostrarFeedback('feedbackPerfil', 'Não foi possível atualizar o perfil.', 'error');
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     inicializarDB();
     _recemExpiradosIds = verificarExpiracoes();
@@ -44,11 +184,23 @@ function renderizarIndex(filtro = 'todos', ordem = 'recentes', pesquisa = '') {
     let anuncios = filtrarPorPerfil(getAnunciosAtivos());
 
     if (pesquisa) {
-        const termo = pesquisa.toLowerCase();
-        anuncios = anuncios.filter(a =>
-            a.titulo.toLowerCase().includes(termo) ||
-            a.descricao.toLowerCase().includes(termo)
-        );
+        const termo = pesquisa.toLowerCase().trim();
+        const termoDigitos = termo.replace(/\D/g, '');
+
+        anuncios = anuncios.filter(a => {
+            const usuario = buscarUsuarioPorId(a.usuarioId) || {};
+            const titulo = a.titulo.toLowerCase();
+            const descricao = a.descricao.toLowerCase();
+            const endereco = (a.endereco || '').toLowerCase();
+            const cidade = (usuario.cidade || '').toLowerCase();
+            const cep = (usuario.cep || '').replace(/\D/g, '');
+
+            return titulo.includes(termo)
+                || descricao.includes(termo)
+                || endereco.includes(termo)
+                || cidade.includes(termo)
+                || (termoDigitos && cep.includes(termoDigitos));
+        });
     }
     if (filtro !== 'todos') anuncios = anuncios.filter(a => a.categoria === filtro);
 
@@ -280,6 +432,8 @@ function initPerfil() {
     configurarUploadImagens();
     configurarAbas();
     configurarCamposCondicionalAnuncio();
+    configurarFormularioPerfil();
+    carregarDadosPerfil();
     renderizarNotificacoesPerfil();
     renderizarConversasPerfil();
     atualizarBadgeNotif();
@@ -428,13 +582,19 @@ function configurarFormAnuncio() {
         const duracao   = document.getElementById('duracaoAnuncio').value;
         const descricao = document.getElementById('descricaoAnuncio').value;
         const volume    = document.getElementById('volumeAnuncio').value;
-        const endereco  = document.getElementById('enderecoAnuncio')?.value || '';
         const restrito  = document.getElementById('restritoParaONGs')?.checked || false;
         const inicio    = document.getElementById('horarioRetiradaInicio')?.value || '';
         const fim       = document.getElementById('horarioRetiradaFim')?.value || '';
+        const usuarioPerfil = getUsuarioLogado();
+        const endereco  = formatarEnderecoPerfil(usuarioPerfil);
 
-        if (!titulo || !categoria || !duracao || !descricao || !volume || !endereco) {
-            mostrarFeedback('feedbackAnuncio', 'Preencha todos os campos obrigatórios, incluindo o endereço.', 'error');
+        if (!titulo || !categoria || !duracao || !descricao || !volume) {
+            mostrarFeedback('feedbackAnuncio', 'Preencha todos os campos obrigatórios.', 'error');
+            return;
+        }
+
+        if (!endereco) {
+            mostrarFeedback('feedbackAnuncio', 'Complete seu perfil com CEP, rua, número, cidade e estado antes de publicar um anúncio.', 'error');
             return;
         }
         if (titulo.length > 100) {
@@ -505,8 +665,15 @@ function addAnuncio() {
     esconderFeedback('feedbackAnuncio');
     // Reaplica estado dos campos condicionais após reset
     configurarCamposCondicionalAnuncio();
+
+    const usuario = getUsuarioLogado();
+
     document.getElementById('anuncio').classList.remove('desativar');
     document.getElementById('menu')?.classList.remove('fixar');
+
+    if (!temEnderecoPerfilCompleto(usuario)) {
+        mostrarFeedback('feedbackAnuncio', 'Complete os dados de CEP, rua, número, cidade e estado no seu perfil para que o endereço apareça no anúncio.', 'info');
+    }
 }
 
 function fecharAnuncio() {
@@ -528,8 +695,6 @@ function abrirEdicao(id) {
     document.getElementById('duracaoAnuncio').value   = anuncio.duracao;
     document.getElementById('descricaoAnuncio').value = anuncio.descricao;
     document.getElementById('volumeAnuncio').value    = anuncio.volume;
-    const inputEndereco = document.getElementById('enderecoAnuncio');
-    if (inputEndereco) inputEndereco.value = anuncio.endereco || '';
 
     const checkRestrito = document.getElementById('restritoParaONGs');
     if (checkRestrito) checkRestrito.checked = anuncio.restritoParaONGs || false;
@@ -871,10 +1036,11 @@ function renderizarDetalhes(anuncio) {
            </div>`
         : '';
 
-    const enderecoHtml = anuncio.endereco
+    const enderecoExibido = anuncio.endereco || formatarEnderecoPerfil(usuario);
+    const enderecoHtml = enderecoExibido
         ? `<div class="endereco-detalhe">
                <h3>Endereço para retirada</h3>
-               <p>📍 ${anuncio.endereco}</p>
+               <p>📍 ${enderecoExibido}</p>
            </div>`
         : '';
 
